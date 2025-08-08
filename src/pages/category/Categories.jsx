@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import { notifyToaster } from '../../components/notifyToaster';
 
 
 const Categories = () => {
@@ -50,11 +51,17 @@ const Categories = () => {
     setLoading(true);
     try {
       await createCategory(reqBody);
+      notifyToaster("New category added.");
       setNewCategory("");
       setImgUrl("");
       fetchCategories();
     } catch (err) {
-      // console.error('Error creating category:', err);
+      if(err?.response?.data?.message){
+        notifyToaster(err?.response?.data?.message);
+      }
+      else{
+        notifyToaster("Something went wrong!");
+      }
     } finally {
       setLoading(false);
     }
@@ -78,9 +85,17 @@ const Categories = () => {
 
     try {
       const resp = await updateCategory(editCategory.id, reqBody);
+      if(resp && resp.data){
+        notifyToaster("Category updated successfully.");
+      }
       fetchCategories();
     } catch (err) {
-      // console.error('Error creating category:', err);
+      if(err?.response?.data?.message){
+        notifyToaster(err?.response?.data?.message);
+      }
+      else{
+        notifyToaster("Something went wrong!");
+      }
     } finally {
       handleClose();
     }

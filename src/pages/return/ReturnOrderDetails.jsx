@@ -30,7 +30,14 @@ const ReturnOrderDetails = () => {
         notifyToaster("Status Updated");
       }
     }
-    catch(err){}
+    catch(err){
+      if(err?.response?.data?.message){
+        notifyToaster(err?.response?.data?.message);
+      }
+      else{
+        notifyToaster("Something went wrong!");
+      }
+    }
   }
 
     const getReturnedItemDetail = async() => {

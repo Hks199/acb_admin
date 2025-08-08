@@ -82,6 +82,7 @@ const VendorScreen = () => {
     try {
       const res = await updateVendor(vendorUpdateId, reqBody);
       if(res && res.data && res.data.success){
+        notifyToaster("Vendor updated successfully.");
         fetchAllVendors(pages.currentPage);
         setImageUrls([]);
         setVendorUpdateId("");
@@ -89,7 +90,12 @@ const VendorScreen = () => {
         setForm({ vendor_name: "", art_type: "", description: "", email: "", mobile_number: "", gender: "", landmark: "", state: "", city: "", country: "" });
       }
     } catch (err) {
-      // console.error("Error:", err);
+      if(err?.response?.data?.message){
+        notifyToaster(err?.response?.data?.message);
+      }
+      else{
+        notifyToaster("Something went wrong, Please try again later!");
+      }
     }
   };
 
@@ -97,6 +103,11 @@ const VendorScreen = () => {
     const { vendor_name, art_type, description, email, mobile_number, gender, landmark, state, city, country } = form;
     if(!vendor_name, !art_type, !description, !email, !mobile_number, !gender, !landmark, !state, !city, !country){
       notifyToaster("Please fill all the details!");
+      return;
+    }
+
+    if(!vendorProfile){
+      notifyToaster(`Please select vendor's profile picture!`);
       return;
     }
 
@@ -117,12 +128,20 @@ const VendorScreen = () => {
       const res = await createVendor(formData);
       if(res && res.data && res.data.success){
         // console.log("Success:", res.data);
+        notifyToaster("Vendor added successfully.");
         fetchAllVendors(1);
         setVendorProfile(null);
         setForm({ vendor_name: "", art_type: "", description: "", email: "", mobile_number: "", gender: "", landmark: "", state: "", city: "", country: "" });
       }
     }
-    catch(err){}
+    catch(err){
+      if(err?.response?.data?.message){
+        notifyToaster(err?.response?.data?.message);
+      }
+      else{
+        notifyToaster("Something went wrong, Please try again later!");
+      }
+    }
   }
 
   const handleSubmit = async () => {

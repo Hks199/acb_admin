@@ -10,7 +10,7 @@ import { FaEdit } from "react-icons/fa";
 
 const ImageScreen = () => {
     const [pages, setPages] = useState({ totalPages: 1, currentPage: 1 });
-    const [title, setTitle] = useState("");
+    const [title, setTitle] = useState("image");
     const [image, setImage] = useState(null);
     const [imgArr, setImgArr] = useState([]);
     const [imageId, setImageId] = useState("");

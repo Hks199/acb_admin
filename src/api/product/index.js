@@ -30,7 +30,7 @@ export const deleteProduct = async(productId) => {
   }
 };
 
-export const updateProduct = async(productId, payload) => {
+export const updateYourProduct = async(productId, payload) => {
   try {
     const response = await axios.patch(BASE_URL + "inventory/updateProduct/" + productId, payload);
     return response;

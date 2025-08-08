@@ -8,6 +8,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import { useReactToPrint } from "react-to-print";
+import { notifyToaster } from '../../components/notifyToaster';
 
 
 const OrderDetail = () => {
@@ -29,10 +30,17 @@ const OrderDetail = () => {
         try{
             const resp = await changeOrderStatus(reqBody);
             if(resp && resp.data && resp.data.success){
-                // console.log(resp.data)
+                notifyToaster("Order status updated!");
             }
         }
-        catch(err){}
+        catch(err){
+            if(err?.response?.data?.message){
+                    notifyToaster(err?.response?.data?.message);
+                  }
+                  else{
+                    notifyToaster("Something went wrong!");
+                  }
+        }
     }
 
     useEffect(() => {

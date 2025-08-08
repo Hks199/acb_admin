@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import JoditEditor from 'jodit-react';
-import { getAllProducts, createProduct, deleteProduct, updateProduct } from '../../api/product';
+import { getAllProducts, createProduct, deleteProduct, updateYourProduct } from '../../api/product';
 import { getAllCategories } from '../../api/category';
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
@@ -12,6 +12,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Pagination from '@mui/material/Pagination';
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import { getAllVendors } from '../../api/vendor';
+import { notifyToaster } from '../../components/notifyToaster';
 
 
 const Products = () => {
@@ -90,7 +91,7 @@ const Products = () => {
   const fetchproductList = async (pageNum) => {
     const reqBody = {
       page:pageNum,
-      limit:10
+      limit:20
     }
     try {
       const response = await getAllProducts(reqBody);
@@ -100,7 +101,7 @@ const Products = () => {
         setPages({ totalPages: response.data.totalPages, currentPage: response.data.currentPage });
       }
     } catch (err) {
-      console.error('Error fetching categories:', err);
+      // console.error('Error fetching categories:', err);
     }
   };
 
@@ -122,7 +123,7 @@ const Products = () => {
     const { category_id, vendor_id, product_name, price, stock } = form;
 
     if (!category_id || !vendor_id || !product_name.trim() || !content || !price || !stock) {
-      alert("Please fill all required fields before submitting.");
+      notifyToaster("Please fill all required fields before submitting.");
       return;
     }
 
@@ -131,13 +132,19 @@ const Products = () => {
     try {
       const resp = await createProduct({...form, description: content});
       if(resp && resp.data){
+        notifyToaster("Product Added successfully.");
         setForm({ category_id: "", vendor_id: "", product_name: "", price: "", stock: "", isActive: "true", imageUrls: ["", "", "", "", ""]});
         setContent("");
         fetchproductList(1);
         handleClose();
       }
     } catch (err) {
-      console.error(err);
+      if(err?.response?.data?.message){
+        notifyToaster(err?.response?.data?.message);
+      }
+      else{
+        notifyToaster("Something went wrong!");
+      }
     }
   };
 
@@ -177,19 +184,29 @@ const Products = () => {
   };
 
   const updateSelectedProduct = async () => {
-    const { category_id, vendor_id, product_name, description, price, stock } = form;
-
-    if (!category_id || !vendor_id || !product_name.trim() || !description.trim() || !price || !stock) {
-      alert("Please fill all required fields before submitting.");
+    const { category_id, vendor_id, product_name, price, stock } = form;
+    
+    if (!category_id || !vendor_id || !product_name?.trim() || !content || !price || !stock) {
+      notifyToaster("Please fill all required fields before submitting.");
       return;
     }
 
+
     try {
-      const resp = await updateProduct(updatedProductId, form);
+      // const resp = await updateYourProduct(updatedProductId, {...form, description: content});
+      const resp = await updateYourProduct(updatedProductId, form);
+      if(resp && resp.data){
+        notifyToaster("Product updated!");
+      }
       fetchproductList(pages.currentPage);
        handleClose();
     } catch (err) {
-      // console.error('Error creating category:', err);
+      if(err?.response?.data?.message){
+        notifyToaster(err?.response?.data?.message);
+      }
+      else{
+        notifyToaster("Something went wrong!");
+      }
     }
   }
 

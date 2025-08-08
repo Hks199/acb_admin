@@ -11,6 +11,7 @@ import { HexColorPicker } from "react-colorful";
 import TextField from '@mui/material/TextField';
 import Chip from '@mui/material/Chip';
 import Autocomplete from '@mui/material/Autocomplete';
+import { notifyToaster } from '../../components/notifyToaster';
 
 
 const Varients = () => {
@@ -206,10 +207,17 @@ const Varients = () => {
     try{
       const response = await createVarient(reqBody);
       if(response && response.data){
-        // console.log(response);
+        notifyToaster("Varient added successfully!")
       }
     }
-    catch(err){}
+    catch(err){
+      if(err?.response?.data?.message){
+        notifyToaster(err?.response?.data?.message);
+      }
+      else{
+        notifyToaster("Something went wrong!");
+      }
+    }
   }
 
   const editVarient = (obj) => {
@@ -232,10 +240,17 @@ const Varients = () => {
     try{
       const response = await updateVarient(reqBody);
       if(response && response.data){
-        // console.log(response);
+        notifyToaster("Varient added successfully!")
       }
     }
-    catch(err){}
+    catch(err){
+      if(err?.response?.data?.message){
+        notifyToaster(err?.response?.data?.message);
+      }
+      else{
+        notifyToaster("Something went wrong!");
+      }
+    }
   }
 
 
