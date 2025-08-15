@@ -20,19 +20,19 @@ export const createVendor = async (payload) => {
   }
 };
 
-export const deleteVendor = async(vendorId) => {
-
+export const updateVendor = async (vendorId, payload) => {
   try {
-    const response = await axios.delete(BASE_URL + "vendor/delete-vendor/" + vendorId);
+    const response = await axios.patch(BASE_URL + "vendor/update-vendor/" + vendorId, payload);
     return response;
   } catch (error) {
     throw error;
   }
 };
 
-export const updateVendor = async(vendorId, payload) => {
+export const deleteVendor = async(vendorId) => {
+
   try {
-    const response = await axios.patch(BASE_URL + "vendor/update-vendor/" + vendorId, payload);
+    const response = await axios.delete(BASE_URL + "vendor/delete-vendor/" + vendorId);
     return response;
   } catch (error) {
     throw error;

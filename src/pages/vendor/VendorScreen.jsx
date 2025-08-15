@@ -28,22 +28,6 @@ const VendorScreen = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleImageUrlChange = (index, value) => {
-    const updated = [...imageUrls];
-    updated[index] = value;
-    setImageUrls(updated);
-  };
-
-  const addImageField = () => {
-    setImageUrls([...imageUrls, ""]);
-  };
-
-  const removeImageField = (index) => {
-    const updated = imageUrls.filter((_, i) => i !== index);
-    setImageUrls(updated);
-  };
-
-
   const fetchAllVendors = async(pageNum) => {
     const reqBody = { page: pageNum, limit: 15 }
 
@@ -73,23 +57,44 @@ const VendorScreen = () => {
     setImageUrls(obj.imageUrls);
   }
 
-  const handleUpdate = async () => {
-    const reqBody = {
-      ...form,
-      imageUrls,
-    };
+  const handleUpdate = async()  => {
+    const { vendor_name, art_type, description, email, mobile_number, gender, landmark, state, city, country } = form;
+    if(!vendor_name, !art_type, !description, !email, !mobile_number, !gender, !landmark, !state, !city, !country){
+      notifyToaster("Please fill all the details!");
+      return;
+    }
 
-    try {
-      const res = await updateVendor(vendorUpdateId, reqBody);
+    if(!vendorProfile){
+      notifyToaster(`Please select vendor's profile picture!`);
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("vendor_name", vendor_name);
+    formData.append("art_type", art_type);
+    formData.append("description", description);
+    formData.append("email", email);
+    formData.append("mobile_number", mobile_number);
+    formData.append("gender", gender);
+    formData.append("landmark", landmark);
+    formData.append("state", state);
+    formData.append("city", city);
+    formData.append("country", country);
+    formData.append("images", vendorProfile);
+
+    try{
+      const res = await updateVendor(vendorUpdateId, formData);
       if(res && res.data && res.data.success){
-        notifyToaster("Vendor updated successfully.");
-        fetchAllVendors(pages.currentPage);
-        setImageUrls([]);
+        // console.log("Success:", res.data);
+        notifyToaster("Vendor Updated successfully.");
+        fetchAllVendors(1);
+        setVendorProfile(null);
         setVendorUpdateId("");
         setNewVendor(false);
         setForm({ vendor_name: "", art_type: "", description: "", email: "", mobile_number: "", gender: "", landmark: "", state: "", city: "", country: "" });
       }
-    } catch (err) {
+    }
+    catch(err){
       if(err?.response?.data?.message){
         notifyToaster(err?.response?.data?.message);
       }
@@ -97,7 +102,7 @@ const VendorScreen = () => {
         notifyToaster("Something went wrong, Please try again later!");
       }
     }
-  };
+  }
 
   const addVendor = async()  => {
     const { vendor_name, art_type, description, email, mobile_number, gender, landmark, state, city, country } = form;
@@ -144,25 +149,6 @@ const VendorScreen = () => {
     }
   }
 
-  const handleSubmit = async () => {
-    const reqBody = {
-      ...form,
-      imageUrls,
-    };
-
-    try {
-      const res = await createVendor(reqBody);
-      if(res && res.data && res.data.success){
-        // console.log("Success:", res.data);
-        fetchAllVendors(1);
-        setImageUrls([]);
-        setForm({ vendor_name: "", art_type: "", description: "", email: "", mobile_number: "", gender: "", landmark: "", state: "", city: "", country: "" });
-      }
-    } catch (err) {
-      // console.error("Error:", err);
-    }
-  };
-
   useEffect(() => {
     fetchAllVendors(1);
   }, [])
@@ -172,7 +158,12 @@ const VendorScreen = () => {
     <div className='w-full min-h-full'>
       <div className='flex justify-between items-center'>
         <div style={{fontSize:22}}>Vendors</div>
-        <Button variant="contained" size="large" sx={{textTransform:"capitalize"}} onClick={() => setNewVendor(prev => !prev)}>{newVendor ? "Cancel" : "Add New Vendor"}</Button>
+        <Button variant="contained" size="large" sx={{textTransform:"capitalize"}} onClick={() => {
+          setNewVendor(prev => !prev);
+          if(newVendor){
+            setForm({ vendor_name: "", art_type: "", description: "", email: "", mobile_number: "", gender: "", landmark: "", state: "", city: "", country: "" });
+          }
+          }}>{newVendor ? "Cancel" : "Add New Vendor"}</Button>
       </div>
 
       {newVendor && (
@@ -208,27 +199,6 @@ const VendorScreen = () => {
                         file:bg-blue-50 file:text-blue-700
                         hover:file:bg-blue-100"
                 />
-              {/* <p className="font-medium text-gray-700">Image URLs</p>
-              {imageUrls.map((url, index) => (
-                <div key={index} className="flex items-center gap-3">
-                  <TextField
-                    label={`Image URL ${index + 1}`}
-                    value={url}
-                    onChange={(e) => handleImageUrlChange(index, e.target.value)}
-                    fullWidth
-                  />
-                  {imageUrls.length > 1 && (
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      onClick={() => removeImageField(index)}
-                    >
-                      Remove
-                    </Button>
-                  )}
-                </div>
-              ))}
-              <Button variant="outlined" onClick={addImageField}>+ Add Image URL</Button> */}
           </div>
 
           <Button variant="contained" color="primary" onClick={() => {
@@ -236,7 +206,6 @@ const VendorScreen = () => {
               handleUpdate();
             }
             else{
-              // handleSubmit();
               addVendor();
             }
           }}>Submit Vendor</Button>
