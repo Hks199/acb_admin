@@ -97,7 +97,6 @@ const Products = () => {
       const response = await getAllProducts(reqBody);
       if(response && response.data && response.data.success){
         setProductList(response.data.products);
-        // console.log(response.data.products);
         setPages({ totalPages: response.data.totalPages, currentPage: response.data.currentPage });
       }
     } catch (err) {
@@ -180,21 +179,21 @@ const Products = () => {
     setUpdateProduct(true);
     setUpdatedProductId(obj._id)
     initializeFormWithProduct(obj);
+    setContent(obj.description);
     handleClickOpen();
   };
 
   const updateSelectedProduct = async () => {
     const { category_id, vendor_id, product_name, price, stock } = form;
-    
-    if (!category_id || !vendor_id || !product_name?.trim() || !content || !price || !stock) {
+
+    if (!category_id || !vendor_id || !product_name?.trim() || !price || !stock) {
       notifyToaster("Please fill all required fields before submitting.");
       return;
     }
 
 
     try {
-      // const resp = await updateYourProduct(updatedProductId, {...form, description: content});
-      const resp = await updateYourProduct(updatedProductId, form);
+      const resp = await updateYourProduct(updatedProductId, {...form, description: content});
       if(resp && resp.data){
         notifyToaster("Product updated!");
       }

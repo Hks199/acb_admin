@@ -90,7 +90,7 @@ const RatingsAndReview = () => {
         setReviews(resp.data.reviews);
       }
     } catch (err) {
-      console.error('Error getting Reviews By ProductId:', err);
+      // console.error('Error getting Reviews By ProductId:', err);
     }
   };
 

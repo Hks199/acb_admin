@@ -24,6 +24,7 @@ const Varients = () => {
   const [colorImages, setColorImages] = useState({});
   const [varientsArr, setVarientsArr] = useState([]);
 
+  const [updateVarientId, setUpdateVarientId] = useState("");
   const [productList, setProductList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
@@ -141,12 +142,6 @@ const Varients = () => {
   };
 
   const updateSelectedProduct = async () => {
-    const { category_id, vendor_id, product_name, description, price, stock } = form;
-
-    if (!category_id || !vendor_id || !product_name.trim() || !description.trim() || !price || !stock) {
-      alert("Please fill all required fields before submitting.");
-      return;
-    }
 
     try {
       const resp = await updateProduct(updatedProductId, form);
@@ -208,6 +203,12 @@ const Varients = () => {
       const response = await createVarient(reqBody);
       if(response && response.data){
         notifyToaster("Varient added successfully!")
+        setForm({ varient_name: "", productId: "", isSizeAvailable: false, isColorAvailable: false });
+        setSelectedSizes([]);
+        setSelectedColors([]);
+        setCombinationData({});
+        setColorImages({});
+        setAddVarient(false);
       }
     }
     catch(err){
@@ -221,11 +222,50 @@ const Varients = () => {
   }
 
   const editVarient = (obj) => {
+    setUpdateProduct(true);
     setForm({ varient_name: obj.varient_name, productId: obj.productId, isSizeAvailable: false, isColorAvailable: false });
     setSelectedSizes(obj.Size);
     setSelectedColors(obj.Color);
-    setAddVarient(true)
+    setAddVarient(true);
+    setUpdateVarientId(obj._id);
+
+    let newComb = {};
+    obj.combinations.map((obj) => {
+      const key = `${obj.Color}-${obj.Size}`;
+      newComb = {...newComb, [key]: {price: obj.price, stock: obj.stock}}
+    })
+    setCombinationData(newComb);
+
+    let imgObj = {}
+    obj.color_images.map((obj) => {
+      imgObj = {...imgObj, [obj.color]: obj.images}
+    })
+
+    setColorImages(imgObj);
   }
+
+  const generateUpdateCombinations = () => {
+    const result = [];
+
+    selectedSizes.forEach(size => {
+      selectedColors.forEach(color => {
+        const key = `${color}-${size}`;
+        const data = combinationData[key];
+        if (data?.price && data?.stock) {
+          result.push({
+            Size: size,
+            Color: color,
+            price: data.price,
+            stock: data.stock,
+          });
+        }
+      });
+    });
+
+    // console.log(result); // final sorted array
+    const colorImagesArr = getColorImagesArray();
+    handleVarientUpdate(result, colorImagesArr);
+  };
 
   const handleVarientUpdate = async(combinationArr, colorImagesArr) => {
     const reqBody = {
@@ -238,9 +278,16 @@ const Varients = () => {
     }
 
     try{
-      const response = await updateVarient(reqBody);
+      const response = await updateVarient(updateVarientId, reqBody);
       if(response && response.data){
-        notifyToaster("Varient added successfully!")
+        notifyToaster("Varient updated successfully!")
+        setForm({ varient_name: "", productId: "", isSizeAvailable: false, isColorAvailable: false });
+        setSelectedSizes([]);
+        setSelectedColors([]);
+        setCombinationData({});
+        setColorImages({});
+        setAddVarient(false);
+        setUpdateVarientId("");
       }
     }
     catch(err){
@@ -456,7 +503,7 @@ const Varients = () => {
 
 
             {updateProduct ? (
-              <Button variant="contained"fullWidth size="large" sx={{textTransform:"capitalize"}} onClick={updateSelectedProduct}>Update Varient</Button>
+              <Button variant="contained"fullWidth size="large" sx={{textTransform:"capitalize"}} onClick={generateUpdateCombinations}>Update Varient</Button>
             ) : (
               <Button variant="contained"fullWidth size="large" sx={{textTransform:"capitalize"}} onClick={generateCombinations}>Create Varient</Button>
             )}
