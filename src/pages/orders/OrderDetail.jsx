@@ -18,7 +18,10 @@ const OrderDetail = () => {
     const [orderData, setOrderData] = useState(null);
 
     const contentRef = useRef(null);
-    const reactToPrintFn = useReactToPrint({ contentRef });
+    const reactToPrintFn = useReactToPrint({
+        contentRef,
+        documentTitle: orderData ? `Invoice-${orderData.order_number}` : "Order-Bill"
+    });
 
     const handleOrderStatus = async(event) => {
         setStatus(event.target.value);
