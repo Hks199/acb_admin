@@ -62,15 +62,6 @@ const CustomerOrder = () => {
           <div className='col-span-1 text-lg font-semibold'>Action</div>
         </div>
 
-        {/* createdAt: "2025-07-06T17:00:38.207Z"
-        name: "Harsh"
-        orderStatus: "Pending"
-        order_id: "686aabb62c82ac2410b58a52"
-        price_per_unit: 5000
-        quantity: 2
-        totalAmount: 11598
-        total_price: 10000
-        user_id: "682b6c30ecc1700b94079222" */}
 
         {orderList.map((obj, idx) => (
           <div className='p-4 pb-2 w-full grid grid-cols-7 border-t border-gray-200'>
@@ -88,6 +79,29 @@ const CustomerOrder = () => {
             </div>
           </div>
         ))}
+
+        {/* {orderList.map((obj, idx) => {
+          if (idx > 0 && obj.order_number !== orderList[idx - 1].order_number) {
+            return (
+              <div className='p-4 pb-2 w-full grid grid-cols-7 border-t border-gray-200'>
+                    <div className='col-span-3 flex'>
+                        <div className='w-20'>{idx + 1}</div>
+                        <div>{obj.order_number}</div>
+                    </div>
+                    <div className='col-span-1'>{formattedDate(obj.createdAt)}</div>
+                    <div className='col-span-1'>{obj.name}</div>
+                    <div className='col-span-1'>{obj.orderStatus}</div>
+                    <div className='col-span-1'>
+                      <IconButton size="small" onClick={() => navigation("/order-detail", { state: obj })}>
+                        <FaRegEye size={23}/>
+                      </IconButton>
+                    </div>
+                  </div>
+            );
+          }
+          return null
+        })} */}
+
       </div>
 
       <div className='p-4 pb-2 w-full flex justify-center border-t border-gray-200'>

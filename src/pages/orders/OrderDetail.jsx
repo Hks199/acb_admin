@@ -16,13 +16,14 @@ const OrderDetail = () => {
     const receivedData = location.state;
     const [status, setStatus] = useState(receivedData.orderStatus);
     const [orderData, setOrderData] = useState(null);
+    const [showBill, setShowBill] = useState(false);
 
     const contentRef = useRef(null);
     const reactToPrintFn = useReactToPrint({
         contentRef,
         documentTitle: orderData ? `Invoice-${orderData.order_number}` : "Order-Bill"
     });
-
+ 
     const handleOrderStatus = async(event) => {
         setStatus(event.target.value);
         const reqBody = {
@@ -87,6 +88,87 @@ const OrderDetail = () => {
         </div>
 
 
+
+    
+        {orderData && (
+            <div className="bg-gray-100 p-10">
+            <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-2xl p-8 space-y-8">
+
+        {/* Order & Payment Info */}
+        <div className="grid grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <p>
+              <span className="font-semibold text-gray-800">Order ID:</span>{" "}
+              {orderData.order_number}
+            </p>
+            <p>
+              <span className="font-semibold text-gray-800">Date:</span> {new Date(orderData.createdAt).toLocaleString()}
+            </p>
+          </div>
+          <div className="space-y-2 text-right">
+            <p>
+              <span className="font-semibold text-gray-800">Payment Method:</span> {orderData.paymentMethod}
+            </p>
+            <p>
+              <span className="font-semibold text-gray-800">Razorpay ID:</span> {orderData.razorpayOrderId}
+            </p>
+          </div>
+        </div>
+
+        {/* Shipping Info */}
+        <div className="bg-gray-50 border rounded-lg p-5">
+          <h2 className="text-lg font-semibold text-gray-800 mb-2">Shipping Information</h2>
+          <p className="leading-relaxed">
+            {orderData.shippingAddress.fullName} ({orderData.shippingAddress.mobile}) <br />
+            {orderData.shippingAddress.addressLine1}, {orderData.shippingAddress.city}, {orderData.shippingAddress.state} - {orderData.shippingAddress.postalCode} <br />
+            {orderData.shippingAddress.country}
+          </p>
+        </div>
+
+        {/* Products Section */}
+        <div>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Products</h2>
+          <div className="space-y-4">
+
+            {/* Products */}
+            {orderData.orderedItems.map((item, index) => (
+                <div className="flex items-center gap-4 border border-gray-400 rounded-lg p-4">
+                {/* <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
+                    <span className="text-gray-500 text-xs">Image</span>
+                </div> */}
+                <div className="flex-1">
+                    <p className="font-medium text-gray-800">{item.product_name}</p>
+                    <div>Quantity: {item.quantity}</div>
+                    {item.variant_combination && (
+                        <div className="gap-3">
+                            <div>Size: {item.variant_combination.Size}</div>
+                            <div className="flex items-center gap-1">
+                                <span>Color:</span>
+                                <span className="ml-1 w-6 h-6 rounded border" style={{ backgroundColor: item.variant_combination.Color }}></span>
+                            </div>
+                        </div>
+                    )}
+                </div>
+                <p className="font-semibold text-lg">₹{item.price_per_unit}</p>
+                </div>
+            ))}
+
+          </div>
+        </div>
+
+        {/* Totals */}
+        <div className="flex justify-between items-center border-t pt-4">
+          <p className="font-semibold text-lg text-gray-700">Tax: ₹{orderData.tax}</p>
+          <p className="text-xl font-bold">Total Amount: ₹{orderData.totalAmount}</p>
+        </div>
+      </div>
+      </div>
+        )}
+
+
+        <div className='pt-4 w-full text-3xl font-bold border-y-3'>Order Bill</div>
+
+
         {orderData && (
             <div ref={contentRef} className="p-6 mx-auto">
                 {/* <div className='text-4xl font-bold'>LOGO</div> */}
@@ -127,7 +209,15 @@ const OrderDetail = () => {
                     <tbody>
                         {orderData.orderedItems.map((item, index) => (
                             <tr key={index} className="border-t text-sm">
-                                <td className="px-4 py-2 border">{item.product_name}</td>
+                                <td className="px-4 py-2 border">
+                                    <div>{item.product_name}</div>
+                                    {item.variant_combination && (
+                                        <>
+                                            <div>Size: {item.variant_combination.Size}</div>
+                                            {/* <div>Color: {item.variant_combination.Color}</div> */}
+                                        </>
+                                    )}
+                                </td>
                                 <td className="px-4 py-2 border">{item.quantity}</td>
                                 <td className="px-4 py-2 border">₹{item.price_per_unit}</td>
                                 <td className="px-4 py-2 border font-semibold">₹{item.total_price}</td>
