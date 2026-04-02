@@ -23,7 +23,7 @@ const Products = () => {
   const [open, setOpen] = useState(false);
   const [pages, setPages] = useState({ totalPages: 1, currentPage: 1 });
   const [vendorPages, setVendorPages] = useState({ totalPages: 1, currentPage: 1 });
-  const [form, setForm] = useState({ category_id: "", vendor_id: "", product_name: "", price: "", stock: "", isActive: "true", imageUrls: ["", "", "", "", ""] });
+  const [form, setForm] = useState({ category_id: "", vendor_id: "", product_name: "", price: "", actual_price: "", stock: "", isActive: "true", imageUrls: ["", "", "", "", ""] });
   const [updateProduct, setUpdateProduct] = useState(false);
   const [updatedProductId, setUpdatedProductId] = useState(null);
 
@@ -119,20 +119,20 @@ const Products = () => {
   };
 
   const createProducts = async () => {
-    const { category_id, vendor_id, product_name, price, stock } = form;
+    const { category_id, vendor_id, product_name, price, actual_price, stock } = form;
 
-    if (!category_id || !vendor_id || !product_name.trim() || !content || !price || !stock) {
+    if (!category_id || !vendor_id || !product_name.trim() || !content || !price || !stock || !actual_price) {
       notifyToaster("Please fill all required fields before submitting.");
       return;
     }
 
-    // console.log(form)
+    // console.log(form, content)
 
     try {
       const resp = await createProduct({...form, description: content});
       if(resp && resp.data){
         notifyToaster("Product Added successfully.");
-        setForm({ category_id: "", vendor_id: "", product_name: "", price: "", stock: "", isActive: "true", imageUrls: ["", "", "", "", ""]});
+        setForm({ category_id: "", vendor_id: "", product_name: "", price: "", actual_price: "", stock: "", isActive: "true", imageUrls: ["", "", "", "", ""]});
         setContent("");
         fetchproductList(1);
         handleClose();
@@ -184,9 +184,9 @@ const Products = () => {
   };
 
   const updateSelectedProduct = async () => {
-    const { category_id, vendor_id, product_name, price, stock } = form;
+    const { category_id, vendor_id, product_name, price, actual_price, stock } = form;
 
-    if (!category_id || !vendor_id || !product_name?.trim() || !price || !stock) {
+    if (!category_id || !vendor_id || !product_name?.trim() || !price || !stock || !actual_price) {
       notifyToaster("Please fill all required fields before submitting.");
       return;
     }
@@ -329,11 +329,22 @@ const Products = () => {
 
             <div className="flex gap-4">
               <div className="flex-1">
-                <label className="block font-medium text-gray-700">Price (₹)</label>
+                <label className="block font-medium text-gray-700">ACB Price (₹)</label>
                 <input
                   type="number"
                   name="price"
                   value={form.price}
+                  onChange={handleChange}
+                  className="w-full mt-1 px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-400"
+                  required
+                />
+              </div>
+              <div className="flex-1">
+                <label className="block font-medium text-gray-700">Actual Price (₹)</label>
+                <input
+                  type="number"
+                  name="actual_price"
+                  value={form.actual_price}
                   onChange={handleChange}
                   className="w-full mt-1 px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-400"
                   required
