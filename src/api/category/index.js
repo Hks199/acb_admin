@@ -11,6 +11,7 @@ export const getAllCategories = async () => {
   }
 };
 
+
 export const createCategory = async(payload) => {
   try {
     const response = await axios.post(BASE_URL + "category/createCategory", payload);

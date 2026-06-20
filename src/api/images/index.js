@@ -30,6 +30,7 @@ export const deleteImage = async(imageId) => {
   }
 };
 
+
 export const updateImage = async(imageId, payload) => {
   try {
     const response = await axios.patch(BASE_URL + "image/update-image/" + imageId, payload);
