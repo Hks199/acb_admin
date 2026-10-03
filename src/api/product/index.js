@@ -2,6 +2,9 @@ import axios from 'axios';
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
+export const getProductsByCategoryId = (payload) =>
+  axios.post(BASE_URL + "inventory/getProductsByCategoryId", payload);
+
 export const getAllProducts = async (payload) => {
   try {
     const response = await axios.post(BASE_URL + "inventory/getProduct-sortedbyReview", payload);

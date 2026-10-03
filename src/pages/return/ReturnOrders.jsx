@@ -1,3 +1,4 @@
+import PageHeading from '../../components/PageHeading';
 import { useState, useEffect } from 'react';
 import { FaRegEye } from "react-icons/fa";
 import IconButton from '@mui/material/IconButton';
@@ -48,9 +49,9 @@ const ReturnOrders = () => {
 
   return (
     <div className='w-full h-full'>
-      <div style={{fontSize:22}}>All Orders</div>
+      <PageHeading title="Returns" description="Review returned items and manage their status." section="Store management" />
 
-      <div className='my-5 w-full bg-white rounded-lg shadow'>
+      <div className='data-table my-5 w-full bg-white rounded-lg shadow'>
         <div className='p-4 w-full grid grid-cols-7'>
           <div className='col-span-3 text-lg font-semibold flex'>
             <div className='w-20'>No.</div>

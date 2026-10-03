@@ -1,14 +1,28 @@
-import React from 'react';
-import { FaBars } from "react-icons/fa6";
+import { FaBars } from 'react-icons/fa6';
+import { FiChevronRight } from 'react-icons/fi';
+import { useLocation } from 'react-router';
+
+const pageNames = {
+  '/': 'Categories', '/products': 'Products', '/varients': 'Variants',
+  '/images': 'Image library', '/vendor': 'Vendors', '/ratings': 'Ratings & reviews',
+  '/orders': 'Orders', '/order-detail': 'Order details',
+  '/return-orders': 'Returns', '/return-order-details': 'Return details',
+  '/cancel-orders': 'Cancellations', '/cancel-order-details': 'Cancellation details',
+};
 
 const Header = ({ collapsed, setCollapsed }) => {
+  const { pathname } = useLocation();
   return (
-    <div style={{height:"7vh", width:"100%", backgroundColor:"#237bd7"}}>
-        <div onClick={() => setCollapsed(!collapsed)} style={{height:"100%", display:"flex", alignItems:"center", paddingLeft:20, cursor:"pointer"}}>
-            <FaBars color='#ffffff' />
-        </div>
-    </div>
-  )
-}
+    <header className="app-header">
+      <div className="header-leading">
+        <button className="menu-toggle" onClick={() => setCollapsed(!collapsed)} aria-label={collapsed ? 'Expand navigation' : 'Collapse navigation'} aria-expanded={!collapsed} aria-controls="primary-navigation">
+          <FaBars />
+        </button>
+        <div className="breadcrumb"><span>Workspace</span><FiChevronRight aria-hidden="true" /><strong>{pageNames[pathname] || 'Categories'}</strong></div>
+      </div>
+      <div className="workspace-profile"><span className="workspace-label">Art & Craft <small>Store administration</small></span><span className="avatar" aria-hidden="true">AC</span></div>
+    </header>
+  );
+};
 
-export default Header
+export default Header;

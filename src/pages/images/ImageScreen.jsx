@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import { addImage, deleteImage, getAllImages, updateImage } from '../../api/images';
 import { MdDeleteOutline } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
+import PageHeading from '../../components/PageHeading';
 
 
 const ImageScreen = () => {
@@ -97,12 +98,13 @@ const ImageScreen = () => {
 
     return (
         <div className='w-full min-h-full'>
-            <div style={{fontSize:22, marginBottom:20}}>Images</div>
+            <PageHeading title="Image library" description="A home for your visuals. Select an image to copy its URL." />
 
-            <div className='flex items-center'>
+            <div className='form-card upload-panel'>
                 <TextField id="outlined-basic" label="Image Name" size='small' variant="outlined" style={{width:250, marginRight:20}} value={title} onChange={(e) => setTitle(e.target.value)} />
 
                 <input
+                    aria-label="Choose an image to upload"
                     type="file"
                     accept="image/*"
                     onChange={(e) => setImage(e.target.files[0])}
@@ -117,15 +119,15 @@ const ImageScreen = () => {
                 <Button variant="contained" size="large" sx={{textTransform:"capitalize"}} onClick={handleSubmit}>{imageId ? "Update Image" : "Upload Image"}</Button>
             </div>
 
-            <div className='my-10 flex flex-wrap'>
+            <div className='image-grid'>
                 {imgArr.map((obj) => (
-                    <div className='pr-4 pb-4' key={obj._id}>
-                        <img src={obj.imageUrls} className='w-40 h-40 rounded-md object-cover hover:opacity-40 duration-300' onClick={() => copyUrlToClipboard(obj.imageUrls)} />
+                    <div className='image-card' key={obj._id}>
+                        <button type="button" aria-label={`Copy URL for ${obj.title}`} onClick={() => copyUrlToClipboard(obj.imageUrls)}><img src={obj.imageUrls} alt={obj.title} /></button>
                         <div className='flex justify-between items-center'>
                             <div className='text-center text-sm'>{obj.title}</div>
                             <div>
-                                <IconButton onClick={() => removeImage(obj._id)}><MdDeleteOutline /></IconButton>
-                                <IconButton onClick={() =>  editImage(obj._id, obj.title)}><FaEdit size={20} /></IconButton>
+                                <IconButton aria-label={`Delete ${obj.title}`} onClick={() => removeImage(obj._id)}><MdDeleteOutline /></IconButton>
+                                <IconButton aria-label={`Edit ${obj.title}`} onClick={() =>  editImage(obj._id, obj.title)}><FaEdit size={20} /></IconButton>
                             </div>
                         </div>
                     </div>

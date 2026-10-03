@@ -1,3 +1,4 @@
+import PageHeading from '../../components/PageHeading';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import JoditEditor from 'jodit-react';
 import { getAllProducts, createProduct, deleteProduct, updateYourProduct } from '../../api/product';
@@ -212,12 +213,12 @@ const Products = () => {
 
   return (
     <div className='w-full min-h-full'>
-      <div className='flex justify-between items-center'>
-        <div style={{fontSize:22}}>Products</div>
+      <div className='page-toolbar'>
+        <PageHeading title="Products" description="Manage the pieces that make your store unique." section="Catalog" />
         <Button variant="contained" size="large" sx={{textTransform:"capitalize"}} onClick={handleClickOpen}>Add New Product</Button>
       </div>
 
-      <div className='my-5 w-full bg-white rounded-lg shadow'>
+      <div className='data-table my-5 w-full bg-white rounded-lg shadow'>
         <div className='p-4 w-full grid grid-cols-7'>
           <div className='col-span-1 text-lg font-semibold'>No.</div>
           <div className='col-span-3 text-lg font-semibold'>Product Name</div>

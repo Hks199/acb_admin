@@ -1,3 +1,4 @@
+import PageHeading from '../../components/PageHeading';
 import { useState, useEffect } from 'react';
 import { getAllProducts } from '../../api/product';
 import { createVarient, getAllVarient, updateVarient, deleteVarient } from '../../api/varients';
@@ -303,8 +304,8 @@ const Varients = () => {
 
   return (
     <div className='w-full min-h-full'>
-      <div className='flex justify-between items-center'>
-        <div style={{fontSize:22}}>Varients</div>
+      <div className='page-toolbar'>
+        <PageHeading title="Variants" description="Organize sizes, colors, and every little detail." section="Catalog" />
         <Button variant="contained" size="large" sx={{textTransform:"capitalize"}} onClick={() => setAddVarient(true)}>Add New Varient</Button>
       </div>
 
@@ -510,7 +511,7 @@ const Varients = () => {
           </div>
         )}
 
-      <div className='my-5 w-full bg-white rounded-lg shadow'>
+      <div className='data-table my-5 w-full bg-white rounded-lg shadow'>
         <div className='p-4 w-full grid grid-cols-7'>
           <div className='col-span-1 text-lg font-semibold'>No.</div>
           <div className='col-span-3 text-lg font-semibold'>Varient Name</div>

@@ -1,3 +1,4 @@
+import PageHeading from '../../components/PageHeading';
 import { useState, useEffect } from 'react';
 import { createVendor, deleteVendor, getAllVendors, updateVendor } from '../../api/vendor';
 import Button from '@mui/material/Button';
@@ -156,8 +157,8 @@ const VendorScreen = () => {
 
   return (
     <div className='w-full min-h-full'>
-      <div className='flex justify-between items-center'>
-        <div style={{fontSize:22}}>Vendors</div>
+      <div className='page-toolbar'>
+        <PageHeading title="Vendors" description="The people and makers behind your collection." section="Catalog" />
         <Button variant="contained" size="large" sx={{textTransform:"capitalize"}} onClick={() => {
           setNewVendor(prev => !prev);
           if(newVendor){
@@ -214,7 +215,7 @@ const VendorScreen = () => {
       )}
 
 
-    <div className='my-5 w-full bg-white rounded-lg shadow'>
+    <div className='data-table my-5 w-full bg-white rounded-lg shadow'>
         <div className='p-4 w-full grid grid-cols-5'>
           <div className='col-span-1 text-lg font-semibold'>No.</div>
           <div className='col-span-3 text-lg font-semibold'>Vendor Name</div>

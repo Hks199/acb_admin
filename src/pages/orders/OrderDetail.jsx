@@ -9,6 +9,7 @@ import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import { useReactToPrint } from "react-to-print";
 import { notifyToaster } from '../../components/notifyToaster';
+import PageHeading from '../../components/PageHeading';
 
 
 const OrderDetail = () => {
@@ -64,8 +65,8 @@ const OrderDetail = () => {
 
     return (
         <div>
-            <div className='p-6 mb-6 flex justify-between item-center'>
-                <div className='text-2xl font-semibold'>Order Details</div>
+            <div className='order-detail-toolbar page-toolbar'>
+                <PageHeading title="Order details" description="Everything you need to care for this order." section="Store management" />
                 <div className='flex justify-between items-center'>
                     <FormControl style={{ width: 200 }}>
                         <InputLabel id="demo-simple-select-label">Order Status</InputLabel>
@@ -91,7 +92,7 @@ const OrderDetail = () => {
 
 
             {orderData && (
-                <div className="bg-gray-100 p-10">
+                <div className="order-summary bg-gray-100 p-10">
                     <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-2xl p-8 space-y-8">
 
                         {/* Order & Payment Info */}
