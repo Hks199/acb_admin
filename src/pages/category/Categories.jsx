@@ -14,6 +14,7 @@ import { FiPlus, FiGrid, FiFolder } from 'react-icons/fi';
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
+  const [fetchError, setFetchError] = useState('');
   const [loading, setLoading] = useState(false);
   const [newCategory, setNewCategory] = useState("");
   const [imgUrl, setImgUrl] = useState("");
@@ -35,11 +36,15 @@ const Categories = () => {
   }, []);
 
   const fetchCategories = async () => {
+    setFetchError('');
     try {
       const response = await getAllCategories();
+      if (!Array.isArray(response.data)) {
+        throw new Error('The server returned an invalid category list. Please contact the site administrator.');
+      }
       setCategories(response.data);
     } catch (err) {
-      // console.error('Error fetching categories:', err);
+      setFetchError(err.message || 'Unable to load categories. Please try again.');
     }
   };
 
@@ -107,6 +112,11 @@ const Categories = () => {
   return (
     <div className='w-full h-full'>
       <PageHeading title="Categories" description="A little organization. A better shopping experience." />
+
+      {fetchError && <div role="alert" className="form-card" style={{ marginBottom: 20 }}>
+        <p>{fetchError}</p>
+        <Button onClick={fetchCategories}>Retry</Button>
+      </div>}
 
       <div className="form-card category-create">
         <div className="form-card-heading"><span className="section-icon"><FiPlus /></span><div><h2>Create a category</h2><p>Give your products a place to belong.</p></div></div>

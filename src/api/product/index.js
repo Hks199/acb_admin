@@ -1,13 +1,12 @@
-import axios from 'axios';
+import axios from '../client';
 
-const BASE_URL = import.meta.env.VITE_API_URL;
 
 export const getProductsByCategoryId = (payload) =>
-  axios.post(BASE_URL + "inventory/getProductsByCategoryId", payload);
+  axios.post("inventory/getProductsByCategoryId", payload);
 
 export const getAllProducts = async (payload) => {
   try {
-    const response = await axios.post(BASE_URL + "inventory/getProduct-sortedbyReview", payload);
+    const response = await axios.post("inventory/getProduct-sortedbyReview", payload);
     return response;
   } catch (error) {
     throw error;
@@ -16,7 +15,7 @@ export const getAllProducts = async (payload) => {
 
 export const createProduct = async(payload) => {
   try {
-    const response = await axios.post(BASE_URL + "inventory/createProduct", payload);
+    const response = await axios.post("inventory/createProduct", payload);
     return response;
   } catch (error) {
     throw error;
@@ -26,7 +25,7 @@ export const createProduct = async(payload) => {
 export const deleteProduct = async(productId) => {
 
   try {
-    const response = await axios.delete(BASE_URL + "inventory/deleteProduct/" + productId);
+    const response = await axios.delete("inventory/deleteProduct/" + productId);
     return response;
   } catch (error) {
     throw error;
@@ -35,7 +34,7 @@ export const deleteProduct = async(productId) => {
 
 export const updateYourProduct = async(productId, payload) => {
   try {
-    const response = await axios.patch(BASE_URL + "inventory/updateProduct/" + productId, payload);
+    const response = await axios.patch("inventory/updateProduct/" + productId, payload);
     return response;
   } catch (error) {
     throw error;

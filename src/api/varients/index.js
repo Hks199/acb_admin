@@ -1,10 +1,9 @@
-import axios from 'axios';
+import axios from '../client';
 
-const BASE_URL = import.meta.env.VITE_API_URL;
 
 export const getAllVarient = async (payload) => {
   try {
-    const response = await axios.post(BASE_URL + "variants/getAllVariant", payload);
+    const response = await axios.post("variants/getAllVariant", payload);
     return response;
   } catch (error) {
     throw error;
@@ -13,7 +12,7 @@ export const getAllVarient = async (payload) => {
 
 export const createVarient = async (payload) => {
   try {
-    const response = await axios.post(BASE_URL + "variants/create-variant", payload);
+    const response = await axios.post("variants/create-variant", payload);
     return response;
   } catch (error) {
     throw error;
@@ -23,7 +22,7 @@ export const createVarient = async (payload) => {
 export const deleteVarient = async(varientId) => {
 
   try {
-    const response = await axios.delete(BASE_URL + "variants/deleteVariantSet/" + varientId);
+    const response = await axios.delete("variants/deleteVariantSet/" + varientId);
     return response;
   } catch (error) {
     throw error;
@@ -32,7 +31,7 @@ export const deleteVarient = async(varientId) => {
 
 export const updateVarient = async(varientId, payload) => {
   try {
-    const response = await axios.patch(BASE_URL + "variants/updateVariantSet/" + varientId, payload);
+    const response = await axios.patch("variants/updateVariantSet/" + varientId, payload);
     return response;
   } catch (error) {
     throw error;

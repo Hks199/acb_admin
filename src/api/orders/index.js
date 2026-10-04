@@ -1,10 +1,9 @@
-import axios from 'axios';
+import axios from '../client';
 
-const BASE_URL = import.meta.env.VITE_API_URL;
 
 export const getAllOrders = async(payload) => {
     try {
-        const response = await axios.post(BASE_URL + "order/listAllOrders", payload);
+        const response = await axios.post("order/listAllOrders", payload);
     return response;
   } catch (error) {
     throw error;
@@ -13,7 +12,7 @@ export const getAllOrders = async(payload) => {
 
 export const changeOrderStatus = async(payload) => {
   try {
-    const response = await axios.patch(BASE_URL + "order/handle-admin-action", payload);
+    const response = await axios.patch("order/handle-admin-action", payload);
     return response;
   } catch (error) {
     throw error;
@@ -22,7 +21,7 @@ export const changeOrderStatus = async(payload) => {
 
 export const getOrderDetails = async(payload) => {
   try {
-    const response = await axios.post(BASE_URL + "order/getOrderDetails", payload);
+    const response = await axios.post("order/getOrderDetails", payload);
     return response;
   } catch (error) {
     throw error;
@@ -31,7 +30,7 @@ export const getOrderDetails = async(payload) => {
 
 export const getAllReturnedItemsApi = async(payload) => {
   try {
-    const response = await axios.post(BASE_URL + "return/getAllReturnedItems", payload);
+    const response = await axios.post("return/getAllReturnedItems", payload);
     return response;
   } catch (error) {
     throw error;
@@ -40,7 +39,7 @@ export const getAllReturnedItemsApi = async(payload) => {
 
 export const getReturnedItemDetailApi = async(orderId) => {
   try {
-    const response = await axios.get(BASE_URL + "return/getReturnedItemDetail/" + orderId);
+    const response = await axios.get("return/getReturnedItemDetail/" + orderId);
     return response;
   } catch (error) {
     throw error;
@@ -49,7 +48,7 @@ export const getReturnedItemDetailApi = async(orderId) => {
 
 export const updateReturnStatusApi = async(payload) => {
   try {
-    const response = await axios.patch(BASE_URL + "return/return-status", payload);
+    const response = await axios.patch("return/return-status", payload);
     return response;
   } catch (error) {
     throw error;
@@ -58,7 +57,7 @@ export const updateReturnStatusApi = async(payload) => {
 
 export const getAllCancelledItemsApi = async(payload) => {
   try {
-    const response = await axios.post(BASE_URL + "cancel/getAllCancelledItems", payload);
+    const response = await axios.post("cancel/getAllCancelledItems", payload);
     return response;
   } catch (error) {
     throw error;
@@ -67,7 +66,7 @@ export const getAllCancelledItemsApi = async(payload) => {
 
 export const cancelledItemDetailsApi = async(payload) => {
   try {
-    const response = await axios.post(BASE_URL + "cancel/cancel-order-details", payload);
+    const response = await axios.post("cancel/cancel-order-details", payload);
     return response;
   } catch (error) {
     throw error;
@@ -76,7 +75,7 @@ export const cancelledItemDetailsApi = async(payload) => {
 
 export const updateCancelStatusApi = async(payload) => {
   try {
-    const response = await axios.patch(BASE_URL + "cancel/cancelled-orders-status-update", payload);
+    const response = await axios.patch("cancel/cancelled-orders-status-update", payload);
     return response;
   } catch (error) {
     throw error;
