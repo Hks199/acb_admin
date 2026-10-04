@@ -1,4 +1,7 @@
-import { BrowserRouter, Routes, Route } from 'react-router';
+import { useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router';
+import Login from './pages/login/Login';
+import { hasDemoSession, loginWithDemoCredentials, clearDemoSession } from './lib/demoAuth';
 import ParentComponent from './components/ParentComponent';
 import CategoryPage from "./pages/category/Categories";
 import ProductPage from "./pages/product/Products";
@@ -16,12 +19,25 @@ import CancelOrderDetails from './pages/cancel/CancelOrderDetails';
 
 
 function App() {
+  const [authenticated, setAuthenticated] = useState(hasDemoSession);
+
+  const handleLogin = (userId, password) => {
+    if (!loginWithDemoCredentials(userId, password)) return false;
+    setAuthenticated(true);
+    return true;
+  };
+
+  const handleLogout = () => {
+    clearDemoSession();
+    setAuthenticated(false);
+  };
 
   return (
     <div style={{width:"100%", height:"100vh"}}>
       <BrowserRouter>
-        <ParentComponent>
           <Routes>
+            <Route path="/login" element={authenticated ? <Navigate to="/" replace /> : <Login onLogin={handleLogin} />} />
+            <Route element={authenticated ? <ParentComponent onLogout={handleLogout}><Outlet /></ParentComponent> : <Navigate to="/login" replace />}>
             <Route path="/" element={<CategoryPage />} />
             <Route path="/products" element={<ProductPage />} />
             <Route path="/varients" element={<VarientPage />} />
@@ -36,8 +52,8 @@ function App() {
             <Route path="/cancel-order-details" element={<CancelOrderDetails />} />
 
             <Route path="*" element={<CategoryPage />} />
+            </Route>
           </Routes>
-        </ParentComponent>
       </BrowserRouter>
 
       <ToastContainer />

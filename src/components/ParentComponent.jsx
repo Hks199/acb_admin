@@ -3,7 +3,7 @@ import Header from './Header';
 import SidebarPanel from './SidebarPanel';
 
 
-const ParentComponent = ({ children }) => {
+const ParentComponent = ({ children, onLogout }) => {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
@@ -11,7 +11,7 @@ const ParentComponent = ({ children }) => {
       <a className="skip-link" href="#main-content">Skip to content</a>
       <SidebarPanel collapsed={collapsed} />
       <div className="app-workspace">
-        <Header collapsed={collapsed} setCollapsed={setCollapsed} />
+        <Header collapsed={collapsed} setCollapsed={setCollapsed} onLogout={onLogout} />
         <main id="main-content" className="app-main" tabIndex={-1}>
           <div className="page-content">
             {children}

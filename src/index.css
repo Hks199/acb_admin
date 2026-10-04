@@ -52,6 +52,21 @@ button:disabled { cursor: default; }
 .workspace-label { font-size: 12px; font-weight: 600; text-align: right; }
 .workspace-label small { display: block; font-size: 10px; color: var(--muted); font-weight: 400; margin-top: 3px; }
 .avatar { display: grid; place-items: center; width: 38px; height: 38px; background: #eee7db; color: #76644b; border: 3px solid #faf7f2; border-radius: 50%; font-size: 11px; font-weight: 700; }
+.logout-button { display: flex; align-items: center; gap: 7px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 9px; background: white; color: #53636d; font-size: 12px; }
+.logout-button:hover { background: #edf5f1; color: var(--accent); }
+.login-page { min-height: 100dvh; display: grid; place-items: center; padding: 32px 20px; background: radial-gradient(ellipse at top left, #dfede5, transparent 65%), #f6f7f9; }
+.login-card { width: 100%; max-width: 460px; padding: clamp(24px, 5vw, 42px); border: 1px solid var(--line); border-radius: 22px; background: white; box-shadow: 0 18px 60px #172e3210; }
+.login-brand { display: flex; align-items: center; gap: 14px; margin-bottom: 36px; color: #24343d; font-size: 20px; font-weight: 650; }
+.login-brand img { width: 58px; height: 58px; object-fit: cover; border-radius: 12px; }
+.login-brand span { display: block; margin-top: 4px; font-size: 9px; letter-spacing: 2px; color: var(--muted); }
+.login-card h1 { margin: 0; color: #24343d; font-size: 30px; line-height: 1.2; letter-spacing: -.8px; font-weight: 650; }
+.login-description { margin: 12px 0 28px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+.login-form { display: flex; flex-direction: column; gap: 20px; }
+.login-demo { margin-top: 26px; padding: 16px 18px; border: 1px solid #dce9e1; border-radius: 10px; background: #f4f8f5; font-size: 12px; }
+.login-demo strong { color: #437567; font-weight: 600; }
+.login-demo p { display: flex; justify-content: space-between; gap: 12px; margin: 9px 0 0; color: var(--muted); }
+.login-demo code { color: #30444c; }
+@media (max-width: 480px) { .logout-button span { display: none; } }
 .app-main { padding: 36px; }
 .page-content { max-width: 1440px; margin: 0 auto; min-width: 0; }
 .page-heading { margin-bottom: 28px; }

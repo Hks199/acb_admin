@@ -1,5 +1,5 @@
 import { FaBars } from 'react-icons/fa6';
-import { FiChevronRight } from 'react-icons/fi';
+import { FiChevronRight, FiLogOut } from 'react-icons/fi';
 import { useLocation } from 'react-router';
 
 const pageNames = {
@@ -10,7 +10,7 @@ const pageNames = {
   '/cancel-orders': 'Cancellations', '/cancel-order-details': 'Cancellation details',
 };
 
-const Header = ({ collapsed, setCollapsed }) => {
+const Header = ({ collapsed, setCollapsed, onLogout }) => {
   const { pathname } = useLocation();
   return (
     <header className="app-header">
@@ -20,7 +20,11 @@ const Header = ({ collapsed, setCollapsed }) => {
         </button>
         <div className="breadcrumb"><span>Workspace</span><FiChevronRight aria-hidden="true" /><strong>{pageNames[pathname] || 'Categories'}</strong></div>
       </div>
-      <div className="workspace-profile"><span className="workspace-label">Art & Craft <small>Store administration</small></span><span className="avatar" aria-hidden="true">AC</span></div>
+      <div className="workspace-profile">
+        <span className="workspace-label">Art & Craft <small>Store administration</small></span>
+        <span className="avatar" aria-hidden="true">AC</span>
+        <button className="logout-button" onClick={onLogout} type="button"><FiLogOut aria-hidden="true" /><span>Logout</span></button>
+      </div>
     </header>
   );
 };
