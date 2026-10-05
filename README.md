@@ -2,6 +2,12 @@
 
 ## Deploying to Netlify
 
+The T-shirt bulk offer spans this admin app, the sibling `acb_frontend` storefront, and the backend at `C:/Users/admin/Documents/acb_project`. Deploy the backend first, then both frontend builds.
+
+In **T-shirt offer** (also linked from **Variants**), select the T-shirt designs, enable the offer, and save. Defaults are a minimum of 3 shirts and ₹333 per shirt. Different selected designs, sizes, and colors count together; all eligible shirts receive the rate once the minimum is met. Other products are excluded. Percentage discounts do not stack on bulk-priced shirts unless the admin enables stacking. A lower regular price is retained.
+
+The backend stores settings in the `TshirtOffer` collection. `GET/PUT /api/tshirt-offer` reads/saves the settings, and `POST /api/order/quote` calculates prices using the same engine as cart totals and checkout. The offer is initially disabled until eligible products are selected and saved. Saved order line prices include discounts so order history, bills, cancellations, and returns use the paid prices.
+
 - Set the build command to `npm run build` and the publish directory to `dist`.
 - Add `VITE_API_URL` in Netlify's environment variables with the same API base URL used in your local `.env`. Use your hosted HTTPS backend URL, including any API path prefix.
 - Trigger a new production build after changing the variable. Vite includes this value in the JavaScript at build time.

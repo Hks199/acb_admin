@@ -5,6 +5,7 @@ import { useLocation } from 'react-router';
 const pageNames = {
   '/': 'Categories', '/products': 'Products', '/varients': 'Variants',
   '/images': 'Image library', '/vendor': 'Vendors', '/ratings': 'Ratings & reviews',
+  '/tshirt-offer': 'T-shirt offer',
   '/orders': 'Orders', '/order-detail': 'Order details',
   '/return-orders': 'Returns', '/return-order-details': 'Return details',
   '/cancel-orders': 'Cancellations', '/cancel-order-details': 'Cancellation details',

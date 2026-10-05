@@ -13,6 +13,7 @@ import TextField from '@mui/material/TextField';
 import Chip from '@mui/material/Chip';
 import Autocomplete from '@mui/material/Autocomplete';
 import { notifyToaster } from '../../components/notifyToaster';
+import { Link } from 'react-router';
 
 
 const Varients = () => {
@@ -174,7 +175,7 @@ const Varients = () => {
       selectedColors.forEach(color => {
         const key = `${color}-${size}`;
         const data = combinationData[key];
-        if (data?.price && data?.stock) {
+        if (data?.price && data?.stock !== undefined && data?.stock !== null && data?.stock !== "" && Number(data.stock) >= 0) {
           result.push({
             Size: size,
             Color: color,
@@ -252,7 +253,7 @@ const Varients = () => {
       selectedColors.forEach(color => {
         const key = `${color}-${size}`;
         const data = combinationData[key];
-        if (data?.price && data?.stock) {
+        if (data?.price && data?.stock !== undefined && data?.stock !== null && data?.stock !== "" && Number(data.stock) >= 0) {
           result.push({
             Size: size,
             Color: color,
@@ -306,6 +307,7 @@ const Varients = () => {
     <div className='w-full min-h-full'>
       <div className='page-toolbar'>
         <PageHeading title="Variants" description="Organize sizes, colors, and every little detail." section="Catalog" />
+        <Button component={Link} to="/tshirt-offer" variant="outlined" sx={{ mb: 2 }}>Manage T-shirt offer</Button>
         <Button variant="contained" size="large" sx={{textTransform:"capitalize"}} onClick={() => setAddVarient(true)}>Add New Varient</Button>
       </div>
 
@@ -437,7 +439,7 @@ const Varients = () => {
                           }
                         />
                         <TextField id="outlined-basic" label="Stock" variant="outlined" size="small" type="number"
-                          value={combinationData[key]?.stock || ""}
+                          value={combinationData[key]?.stock ?? ""}
                           onChange={(e) =>
                             setCombinationData((prev) => ({
                               ...prev,

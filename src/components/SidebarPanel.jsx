@@ -6,7 +6,7 @@ import { FiBox, FiImage, FiUsers, FiStar, FiShoppingBag, FiLayers, FiRotateCcw, 
 const groups = [
   { label: 'Catalog', items: [
     ['/', 'Categories', BiCategory], ['/products', 'Products', FiBox],
-    ['/varients', 'Variants', FiLayers], ['/images', 'Image library', FiImage],
+    ['/varients', 'Variants', FiLayers], ['/tshirt-offer', 'T-shirt offer', FiShoppingBag], ['/images', 'Image library', FiImage],
     ['/vendor', 'Vendors', FiUsers],
   ] },
   { label: 'Store management', items: [
