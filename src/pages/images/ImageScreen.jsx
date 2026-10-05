@@ -7,6 +7,7 @@ import { addImage, deleteImage, getAllImages, updateImage } from '../../api/imag
 import { MdDeleteOutline } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import PageHeading from '../../components/PageHeading';
+import { notifyToaster } from '../../components/notifyToaster';
 
 
 const ImageScreen = () => {
@@ -15,6 +16,15 @@ const ImageScreen = () => {
     const [image, setImage] = useState(null);
     const [imgArr, setImgArr] = useState([]);
     const [imageId, setImageId] = useState("");
+    const [uploading, setUploading] = useState(false);
+
+    const showError = (error) => {
+        const data = error.response?.data;
+        const message = typeof data?.message === 'string' && !/^\d+$/.test(data.message)
+            ? data.message
+            : data?.errorType || error.message || 'Unable to upload image. Please try again.';
+        notifyToaster(message);
+    };
 
 
     const fetchAllImages = async(pageNum) => {
@@ -56,23 +66,34 @@ const ImageScreen = () => {
     const handleUpdateImage = async () => {
         const formData = new FormData();
         formData.append("title", title);
-        formData.append("image", image);
+        if (image) formData.append("image", image);
 
         try {
             const response = await updateImage(imageId, formData);
             if(response && response.data && response.data.success){
+                setTitle("");
+                setImageId("");
+                setImage(null);
                 fetchAllImages(1);
             }
-        } catch (error) {}
-        finally {
-            setTitle("");
-            setImageId("");
-        }
+        } catch (error) { showError(error); }
     }
 
     const handleSubmit = async () => {
+        if (uploading) return;
+        if (!title.trim()) {
+            notifyToaster('Enter an image name.');
+            return;
+        }
+        if (!imageId && !image) {
+            notifyToaster('Choose an image to upload.');
+            return;
+        }
+
+        setUploading(true);
         if(imageId){
-            handleUpdateImage();
+            try { await handleUpdateImage(); }
+            finally { setUploading(false); }
             return;
         }
 
@@ -85,9 +106,11 @@ const ImageScreen = () => {
             const response = await addImage(formData);
             if(response && response.data && response.data.success){
                 setTitle("");
+                setImage(null);
                 fetchAllImages(1);
             }
-        } catch (error) {}
+        } catch (error) { showError(error); }
+        finally { setUploading(false); }
     };
 
     const copyUrlToClipboard = async (imageUrl) => {
@@ -116,7 +139,7 @@ const ImageScreen = () => {
                         hover:file:bg-blue-100"
                 />
 
-                <Button variant="contained" size="large" sx={{textTransform:"capitalize"}} onClick={handleSubmit}>{imageId ? "Update Image" : "Upload Image"}</Button>
+                <Button loading={uploading} variant="contained" size="large" sx={{textTransform:"capitalize"}} onClick={handleSubmit}>{imageId ? "Update Image" : "Upload Image"}</Button>
             </div>
 
             <div className='image-grid'>
