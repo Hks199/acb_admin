@@ -8,6 +8,7 @@ const pageNames = {
   '/promotional-popups': 'Promotional popups',
   '/announcements': 'Announcements',
   '/tshirt-offer': 'T-shirt offer',
+  '/discount-rules': 'Discount & Offers Setup',
   '/orders': 'Orders', '/order-detail': 'Order details',
   '/return-orders': 'Returns', '/return-order-details': 'Return details',
   '/cancel-orders': 'Cancellations', '/cancel-order-details': 'Cancellation details',

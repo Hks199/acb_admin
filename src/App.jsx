@@ -10,6 +10,7 @@ import CategoryPage from "./pages/category/Categories";
 import ProductPage from "./pages/product/Products";
 import VarientPage from './pages/varients/Varients';
 import TshirtOffer from './pages/offers/TshirtOffer';
+import DiscountRules from './pages/offers/DiscountRules';
 import ImageScreen from './pages/images/ImageScreen';
 import VendorScreen from './pages/vendor/VendorScreen';
 import RatingsAndReview from './pages/ratings/RatingsAndReview';
@@ -66,6 +67,7 @@ function App() {
             <Route path="/promotional-popups" element={<PopupCampaigns />} />
             <Route path="/announcements" element={<Announcements />} />
             <Route path="/tshirt-offer" element={<TshirtOffer />} />
+            <Route path="/discount-rules" element={<DiscountRules />} />
             <Route path="/images" element={<ImageScreen />} />
             <Route path="/vendor" element={<VendorScreen />} />
             <Route path="/ratings" element={<RatingsAndReview />} />

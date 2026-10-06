@@ -50,6 +50,16 @@ MongoDB stores `Announcement` documents and one `AnnouncementLock` document. Eve
 
 Validation: `node --test tests/*.test.mjs` and `npm run build` in each Vite app; `node --test tests/*.test.js` in the backend. Announcement tests use simulated database transactions and local HTTP servers for auth; they do not write to the live database.
 
+## Discount & Offers Setup
+
+Open **Store management > Discount & Offers Setup** to enable or disable each percentage rule, change its rate, and set the high-value order threshold. Each block saves independently. Rules live in the centralized MongoDB `discount_rules` collection, with one document per unique `ruleKey`, following the supplied schema. Missing documents are seeded once per backend process with active 10% first-order and active 5% milestone at ₹4999. Seeding uses `$setOnInsert` and preserves existing saved rules. The old `Discount` collection and its fixed document ID no longer determine checkout pricing.
+
+Protected APIs: `GET /api/admin/discount-rules` returns `{ success, rules }`; `PUT /api/admin/discount-rules/:ruleKey` accepts `discountPercentage` (0–100), `minPurchaseAmount` (non-negative amount or null), and boolean `isActive`, returning `{ success, rule }`. Numeric values accept at most two decimal places. Only signed-in database-verified Admin accounts can manage rules.
+
+Every cart quote, buy-now quote, and payment-order creation reads current active rules. First-order eligibility uses the authenticated customer ID and counts **all** existing orders, including pending/failed/refunded orders, as specified. Guests cannot receive this reward. Milestone eligibility uses the total after product promotions/bulk pricing, before percentage discounts, and includes orders exactly at the threshold. Null thresholds mean no minimum. Both discounts are additive against each eligible item's promoted price, rounded in paise and capped to avoid negative charges. The T-shirt offer's percentage-stacking switch is preserved. Saved orders, invoices and refunds retain their original paid amounts.
+
+Deploy the backend changes to EC2 and the updated admin build to Netlify. The existing customer frontend already consumes server-calculated quotes; no storefront rebuild is needed for this feature. Cart calculation and payment creation now require the existing customer JWT; guest product quotes remain public. Backend regression checks: `node --test tests/*.test.js`; admin controls: `node --test tests/discountRules.test.mjs`, `npm run build`.
+
 ## Promotional popup campaigns
 
 Open **Store management > Promotional popups** to create, edit, pause, delete and reorder campaigns. Drag saved rows or use their up/down arrows; order saves immediately. The editor previews the storefront card at desktop (840px), tablet (640px), and mobile (360px) widths. Mobile displays a compact image above the content by default. Image fit (crop/full image), image position, and mobile visibility can be adjusted per campaign. With no image or a failed image, mobile shows the content alone. Choose dark/light glass and promotion, newsletter signup, coupon unlock, or clearance countdown. Countdown campaigns require an end time; expired campaigns stop being served. Enter times locally; the backend stores UTC.
