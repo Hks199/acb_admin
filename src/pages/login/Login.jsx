@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Alert, Button, IconButton, InputAdornment, TextField } from '@mui/material';
 import { FiEye, FiEyeOff, FiArrowRight } from 'react-icons/fi';
-import { DEMO_USER_ID, DEMO_PASSWORD } from '../../lib/demoAuth';
 import logo from '../../assets/logo.jpeg';
 
 const Login = ({ onLogin }) => {
@@ -10,15 +9,19 @@ const Login = ({ onLogin }) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [signingIn, setSigningIn] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!onLogin(userId, password)) {
-      setError('Incorrect user ID or password. Please try again.');
-      return;
-    }
-    navigate('/', { replace: true });
+    setSigningIn(true);
+    setError('');
+    try {
+      await onLogin(userId, password);
+      navigate('/', { replace: true });
+    } catch (err) {
+      setError(err.response?.data?.message || err.message || 'Unable to sign in.');
+    } finally { setSigningIn(false); }
   };
 
   return (
@@ -34,7 +37,7 @@ const Login = ({ onLogin }) => {
 
         <form onSubmit={handleSubmit} className="login-form">
           {error && <Alert severity="error">{error}</Alert>}
-          <TextField label="User ID" name="username" value={userId} required autoFocus autoComplete="username" fullWidth
+          <TextField label="Admin email or mobile number" name="username" value={userId} required autoFocus autoComplete="username" fullWidth
             onChange={(event) => { setUserId(event.target.value); setError(''); }} />
           <TextField label="Password" name="password" value={password} type={showPassword ? 'text' : 'password'} required autoComplete="current-password" fullWidth
             onChange={(event) => { setPassword(event.target.value); setError(''); }}
@@ -46,14 +49,10 @@ const Login = ({ onLogin }) => {
                 </IconButton>
               </InputAdornment>
             ) } }} />
-          <Button variant="contained" type="submit" size="large" fullWidth endIcon={<FiArrowRight />}>Sign in</Button>
+          <Button variant="contained" type="submit" disabled={signingIn} size="large" fullWidth endIcon={<FiArrowRight />}>{signingIn ? 'Signing in...' : 'Sign in'}</Button>
         </form>
 
-        <div className="login-demo">
-          <strong>Demo credentials</strong>
-          <p>User ID <code>{DEMO_USER_ID}</code></p>
-          <p>Password <code>{DEMO_PASSWORD}</code></p>
-        </div>
+        <p className="login-description">Use your verified store account with the Admin role.</p>
       </section>
     </main>
   );

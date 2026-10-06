@@ -10,6 +10,7 @@ const groups = [
     ['/vendor', 'Vendors', FiUsers],
   ] },
   { label: 'Store management', items: [
+    ['/announcements', 'Announcements', FiFeather],
     ['/orders', 'Orders', FiShoppingBag], ['/ratings', 'Ratings & reviews', FiStar],
     ['/cancel-orders', 'Cancellations', FiXCircle], ['/return-orders', 'Returns', FiRotateCcw],
   ] },

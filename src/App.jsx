@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router';
 import Login from './pages/login/Login';
-import { hasDemoSession, loginWithDemoCredentials, clearDemoSession } from './lib/demoAuth';
+import { getAdminToken, clearAdminSession, ADMIN_TOKEN_KEY } from './lib/adminAuth';
+import api from './api/client';
+import Announcements from './pages/announcements/Announcements';
 import ParentComponent from './components/ParentComponent';
 import CategoryPage from "./pages/category/Categories";
 import ProductPage from "./pages/product/Products";
@@ -20,18 +22,36 @@ import CancelOrderDetails from './pages/cancel/CancelOrderDetails';
 
 
 function App() {
-  const [authenticated, setAuthenticated] = useState(hasDemoSession);
-
-  const handleLogin = (userId, password) => {
-    if (!loginWithDemoCredentials(userId, password)) return false;
-    setAuthenticated(true);
-    return true;
-  };
+  const [authenticated, setAuthenticated] = useState(false);
+  const [checkingSession, setCheckingSession] = useState(true);
 
   const handleLogout = () => {
-    clearDemoSession();
+    clearAdminSession();
     setAuthenticated(false);
   };
+  useEffect(() => {
+    let mounted = true;
+    const expired = () => setAuthenticated(false);
+    window.addEventListener('admin-session-expired', expired);
+    const check = async () => {
+      try {
+        if (getAdminToken()) {
+          await api.get('admin/session');
+          if (mounted) setAuthenticated(true);
+        }
+      } catch { clearAdminSession(); }
+      finally { if (mounted) setCheckingSession(false); }
+    };
+    check();
+    return () => { mounted = false; window.removeEventListener('admin-session-expired', expired); };
+  }, []);
+
+  const handleLogin = async (identifier, password) => {
+    const response = await api.post('admin/login', { identifier, password });
+    sessionStorage.setItem(ADMIN_TOKEN_KEY, response.data.token);
+    setAuthenticated(true);
+  };
+  if (checkingSession) return <p role="status" style={{ padding: 24 }}>Checking admin session...</p>;
 
   return (
     <div style={{width:"100%", height:"100vh"}}>
@@ -42,6 +62,7 @@ function App() {
             <Route path="/" element={<CategoryPage />} />
             <Route path="/products" element={<ProductPage />} />
             <Route path="/varients" element={<VarientPage />} />
+            <Route path="/announcements" element={<Announcements />} />
             <Route path="/tshirt-offer" element={<TshirtOffer />} />
             <Route path="/images" element={<ImageScreen />} />
             <Route path="/vendor" element={<VendorScreen />} />
