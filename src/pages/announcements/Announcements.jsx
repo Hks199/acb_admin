@@ -59,15 +59,14 @@ export default function Announcements() {
     try {
       const response = await toggleAnnouncement(row._id, !row.isActive);
       if (editing === row._id) setForm((old) => ({ ...old, isActive: response.data.isActive }));
-      else if (response.data.isActive && editing) setForm((old) => ({ ...old, isActive: false }));
-      setSuccess(response.data.isActive ? 'Announcement activated. All other announcements are inactive.' : 'Announcement hidden.');
+      setSuccess(response.data.isActive ? 'Announcement activated.' : 'Announcement hidden.');
       await load();
     } catch (err) { setError(err.response?.data?.message || err.message || 'Unable to change status.'); }
     finally { setBusy(false); }
   };
   const invalidLink = !validUrl(form.targetUrl.trim()) || form.targetUrl.length > 2048;
   return <>
-    <PageHeading section="Store management" title="Announcements" description="Manage the message above your storefront navigation. Only one announcement can be active." />
+    <PageHeading section="Store management" title="Announcements" description="Manage messages above your storefront navigation. Active announcements rotate every 4 seconds." />
     <Stack spacing={3}>
       {error && <Alert severity="error" action={<Button color="inherit" disabled={busy || loading} onClick={refresh}>Retry</Button>}>{error}</Alert>}
       {success && <Alert severity="success">{success}</Alert>}

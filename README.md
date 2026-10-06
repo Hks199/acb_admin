@@ -4,7 +4,7 @@
 
 The T-shirt bulk offer spans this admin app, the sibling `acb_frontend` storefront, and the backend at `C:/Users/admin/Documents/acb_project`. Deploy the backend first, then both frontend builds.
 
-In **T-shirt offer** (also linked from **Variants**), select the T-shirt designs, enable the offer, and save. Defaults are a minimum of 3 shirts and â‚¹333 per shirt. Different selected designs, sizes, and colors count together; all eligible shirts receive the rate once the minimum is met. Other products are excluded. Percentage discounts do not stack on bulk-priced shirts unless the admin enables stacking. A lower regular price is retained.
+In **T-shirt offer** (also linked from **Variants**), select the T-shirt designs, enable the offer, and save. Defaults are a minimum of 3 shirts and Ã¢â€šÂ¹333 per shirt. Different selected designs, sizes, and colors count together; all eligible shirts receive the rate once the minimum is met. Other products are excluded. Percentage discounts do not stack on bulk-priced shirts unless the admin enables stacking. A lower regular price is retained.
 
 The backend stores settings in the `TshirtOffer` collection. `GET/PUT /api/tshirt-offer` reads/saves the settings, and `POST /api/order/quote` calculates prices using the same engine as cart totals and checkout. The offer is initially disabled until eligible products are selected and saved. Saved order line prices include discounts so order history, bills, cancellations, and returns use the paid prices.
 
@@ -28,7 +28,7 @@ If you are developing a production application, we recommend using TypeScript wi
 
 ## Announcement bar
 
-Open **Store management > Announcements** to create or edit messages, choose a badge style and optional label, add an HTTP/HTTPS action link, and activate/deactivate saved announcements. Activating a message automatically hides all others. Text is limited to 255 characters and badge labels to 15. The storefront renders the bar above navigation, wraps on mobile, and refreshes its visibility every 30 seconds and on tab focus.
+Open **Store management > Announcements** to create or edit messages, choose a badge style and optional label, add an HTTP/HTTPS action link, and activate/deactivate saved announcements. Multiple messages can stay active together; the storefront cycles through them in creation order every 4 seconds with a smooth transition. Text is limited to 255 characters and badge labels to 15. The storefront renders the bar above navigation, wraps on mobile, and refreshes its visibility every 30 seconds and on tab focus.
 
 Deploy the backend at `C:/Users/admin/Documents/acb_project` first, then rebuild/deploy this dashboard and `../acb_frontend`. Both Vite apps need `VITE_API_URL` pointing to the HTTPS backend with the `/api/` prefix. No announcement appears until one is saved as active.
 
@@ -36,7 +36,7 @@ The dashboard now uses real admin authentication instead of demo credentials. Si
 
 Endpoints:
 
-- `GET /api/announcement/active`: public; returns the active document or `null`, without caching.
+- `GET /api/announcement/active`: public; returns an array of all active documents in creation order, or `[]`, without caching.
 - `GET /api/admin/announcements`: list all saved documents.
 - `POST /api/admin/announcements`: create a document.
 - `PUT /api/admin/announcements/:id`: update fields.
@@ -46,6 +46,6 @@ Endpoints:
 
 All management endpoints require a valid JWT and the `Admin` role checked against the database. Announcement payloads use `{ text, badge: { type, text }, targetUrl, isActive }`; update/create also accept `badge_type`, `badge_text`, `target_url`, and `is_active`. Badge types are `offer`, `alert`, `new_launch`, and `info`. Links must be HTTP/HTTPS URLs without embedded credentials.
 
-MongoDB stores `Announcement` documents and one `AnnouncementLock` document. Every mutation writes the singleton lock inside a transaction before updating announcements, so concurrent activations serialize and failed saves roll back. This requires a MongoDB replica set or Atlas, as existing cart transactions already do. Transactions and collection creation must be permitted for the backend database account.
+MongoDB stores `Announcement` documents and one `AnnouncementLock` document. Every mutation writes the singleton lock inside a transaction before updating announcements, so concurrent toggles of the same message serialize and failed saves roll back. Activating one message does not deactivate any others. This requires a MongoDB replica set or Atlas, as existing cart transactions already do. Transactions and collection creation must be permitted for the backend database account.
 
 Validation: `node --test tests/*.test.mjs` and `npm run build` in each Vite app; `node --test tests/*.test.js` in the backend. Announcement tests use simulated database transactions and local HTTP servers for auth; they do not write to the live database.

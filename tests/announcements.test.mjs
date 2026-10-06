@@ -9,13 +9,12 @@ const walk = (node) => {
   return [node, ...walk(node.props?.children), ...walk(node.props?.control)];
 };
 const settle = () => new Promise(setImmediate);
-function setup() {
+function setup(initialRows = []) {
   const slots = [], effects = [], requests = [];
   let cursor = 0, first = true;
-  let rows = [];
+  let rows = initialRows;
   const save = async (body, id = String(rows.length + 1)) => {
     requests.push({ id, body });
-    if (body.isActive) rows.forEach((row) => { row.isActive = false; });
     const row = { ...body, _id: id };
     rows = [...rows.filter((old) => old._id !== id), row];
     return { data: row };
@@ -78,4 +77,25 @@ test('admin form creates, previews, edits and toggles announcements with live co
   await tree.find((node) => node.props?.component === 'form').props.onSubmit({ preventDefault() {} });
   assert.equal(app.requests[2].id, '1');
   assert.equal(app.requests[2].body.text, 'New collection');
+});
+
+test('activating another message preserves the active message being edited and saving retains both', async () => {
+  const app = setup([
+    { _id: '1', text: 'First', badge: { type: 'offer', text: 'OFFER' }, targetUrl: '', isActive: true },
+    { _id: '2', text: 'Second', badge: { type: 'info', text: '' }, targetUrl: '', isActive: false },
+  ]);
+  app.render(); app.effects.forEach((effect) => effect()); await settle();
+  let tree = app.render();
+  tree.find((node) => node.type === 'Button' && node.props.children === 'Edit').props.onClick();
+  tree = app.render();
+  await tree.find((node) => node.type === 'Button' && node.props.children === 'Activate').props.onClick();
+  tree = app.render();
+  assert.equal(tree.find((node) => node.type === 'Switch').props.checked, true);
+  assert.equal(tree.filter((node) => node.type === 'Chip' && node.props.label === 'Active').length, 2);
+  await tree.find((node) => node.props?.component === 'form').props.onSubmit({ preventDefault() {} });
+  tree = app.render();
+  assert.equal(tree.filter((node) => node.type === 'Chip' && node.props.label === 'Active').length, 2);
+  await tree.find((node) => node.type === 'Button' && node.props.children === 'Deactivate').props.onClick();
+  tree = app.render();
+  assert.equal(tree.filter((node) => node.type === 'Chip' && node.props.label === 'Active').length, 1);
 });
