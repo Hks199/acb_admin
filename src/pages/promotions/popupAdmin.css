@@ -9,7 +9,7 @@
 .promo-preview-canvas { transform-origin: top left; }
 .promo-preview-caption { font-size: 10px; color: #73808a; text-align: center; margin: 14px 0 0; }
 .promo-preview-canvas[data-viewport='desktop'] .promo-card, .promo-preview-canvas[data-viewport='tablet'] .promo-card { grid-template-columns: 42% 58%; min-height: 460px; }
-.promo-preview-canvas[data-viewport='desktop'] .promo-art, .promo-preview-canvas[data-viewport='tablet'] .promo-art { display: block; }
+.promo-preview-canvas[data-viewport='desktop'] .promo-art, .promo-preview-canvas[data-viewport='tablet'] .promo-art { display: block; height: auto; }
 .promo-preview-canvas[data-viewport='desktop'] .promo-content, .promo-preview-canvas[data-viewport='tablet'] .promo-content { padding: 52px 38px 30px; }
 .promo-preview-canvas[data-viewport='desktop'] h2, .promo-preview-canvas[data-viewport='tablet'] h2 { font-size: 36px; }
 .promo-queue { display: flex; flex-direction: column; gap: 10px; }

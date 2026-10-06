@@ -40,6 +40,9 @@ test('admin edits preview live, validates CTA URLs, uploads to S3, and saves all
   field('Title').props.onChange({ target: { value: 'Unlock 10% off' } });
   field('Subtitle').props.onChange({ target: { value: 'Our next collection' } });
   field('Coupon code (optional)').props.onChange({ target: { value: 'FIRST10' } });
+  field('Image fit').props.onChange({ target: { value: 'contain' } });
+  field('Image position').props.onChange({ target: { value: 'top' } });
+  tree.find((node) => node.type === 'FormControlLabel' && node.props.label === 'Show image on mobile').props.control.props.onChange({ target: { checked: false } });
   field('Background theme').props.onChange({ target: { value: 'glass_light' } });
   field('CTA target').props.onChange({ target: { value: 'javascript:alert(1)' } });
   tree.find((node) => node.type === 'Switch').props.onChange({ target: { checked: true } });
@@ -53,6 +56,7 @@ test('admin edits preview live, validates CTA URLs, uploads to S3, and saves all
   await tree.find((node) => node.type === 'form').props.onSubmit({ preventDefault() {} });
   const saved = app.requests.find((request) => request.method === 'save');
   assert.equal(saved.body.title, 'Unlock 10% off'); assert.equal(saved.body.couponCode, 'FIRST10');
+  assert.equal(saved.body.imageFit, 'contain'); assert.equal(saved.body.imagePosition, 'top'); assert.equal(saved.body.showImageOnMobile, false);
   assert.equal(saved.body.imageUrl, 'https://example.com/campaign.png'); assert.equal(saved.body.isActive, true); assert.equal(saved.body.backgroundTheme, 'glass_light');
 });
 test('drag-and-drop persists order and updates the edited priority; active campaigns stay independent', async () => {

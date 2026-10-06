@@ -1,4 +1,4 @@
-export const newCampaign = () => ({ title: '', subtitle: '', imageUrl: '', ctaText: 'Explore collection', ctaUrl: '/products', couponCode: '', displayType: 'promotion', backgroundTheme: 'glass_dark', isActive: false, endsAt: null });
+export const newCampaign = () => ({ title: '', subtitle: '', imageUrl: '', imageFit: 'cover', imagePosition: 'center', showImageOnMobile: true, ctaText: 'Explore collection', ctaUrl: '/products', couponCode: '', displayType: 'promotion', backgroundTheme: 'glass_dark', isActive: false, endsAt: null });
 export const validCampaignUrl = (value, internal = false) => {
   if (!value) return true;
   if (internal && value.startsWith('/') && !value.startsWith('//') && !value.includes('\\') && [...value].every((character) => character.charCodeAt(0) > 32)) return true;

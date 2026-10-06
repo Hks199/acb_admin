@@ -109,6 +109,13 @@ export default function PopupCampaigns() {
           <TextField label="Coupon code (optional)" value={form.couponCode} disabled={busy} onChange={(event) => change('couponCode', event.target.value)} slotProps={{ htmlInput: { maxLength: 40 } }} />
           <TextField label="Image URL" type="url" value={form.imageUrl} disabled={busy} error={imageInvalid} onChange={(event) => change('imageUrl', event.target.value)} slotProps={{ htmlInput: { maxLength: 2048 } }} helperText="Upload below or paste an HTTP/HTTPS image URL." />
           <Button component="label" variant="outlined" disabled={busy} startIcon={<FiUpload />}>{uploading ? 'Uploading...' : 'Upload image to S3'}<input hidden type="file" accept="image/jpeg,image/png,image/webp,image/avif" onChange={upload} /></Button>
+          <TextField select label="Image fit" value={form.imageFit} disabled={busy} onChange={(event) => change('imageFit', event.target.value)} helperText="Fill crops the image to fit. Full image keeps the whole picture visible.">
+            <MenuItem value="cover">Fill panel (crop)</MenuItem><MenuItem value="contain">Show full image</MenuItem>
+          </TextField>
+          <TextField select label="Image position" value={form.imagePosition} disabled={busy} onChange={(event) => change('imagePosition', event.target.value)}>
+            {['center', 'top', 'bottom', 'left', 'right'].map((position) => <MenuItem key={position} value={position}>{position.charAt(0).toUpperCase() + position.slice(1)}</MenuItem>)}
+          </TextField>
+          <FormControlLabel label="Show image on mobile" control={<Switch checked={form.showImageOnMobile} disabled={busy} onChange={(event) => change('showImageOnMobile', event.target.checked)} />} />
           <TextField label="Ends at (optional)" type="datetime-local" value={localDateValue(form.endsAt)} disabled={busy} required={form.displayType === 'clearance_countdown'} error={!!countdownInvalid}
             slotProps={{ inputLabel: { shrink: true } }} onChange={(event) => change('endsAt', event.target.value ? new Date(event.target.value).toISOString() : null)} helperText="Local time. Required for countdowns; expired campaigns stop displaying." />
           <Stack direction="row" spacing={1}><Button type="submit" variant="contained" disabled={busy || loading || !loaded || !form.title.trim() || !form.ctaText.trim() || imageInvalid || linkInvalid || !!countdownInvalid}>{saving ? 'Saving...' : editing ? 'Save changes' : 'Create campaign'}</Button>{editing && <Button disabled={busy} onClick={reset}>Cancel editing</Button>}</Stack>

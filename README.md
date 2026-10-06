@@ -4,7 +4,7 @@
 
 The T-shirt bulk offer spans this admin app, the sibling `acb_frontend` storefront, and the backend at `C:/Users/admin/Documents/acb_project`. Deploy the backend first, then both frontend builds.
 
-In **T-shirt offer** (also linked from **Variants**), select the T-shirt designs, enable the offer, and save. Defaults are a minimum of 3 shirts and Ã¢â€šÂ¹333 per shirt. Different selected designs, sizes, and colors count together; all eligible shirts receive the rate once the minimum is met. Other products are excluded. Percentage discounts do not stack on bulk-priced shirts unless the admin enables stacking. A lower regular price is retained.
+In **T-shirt offer** (also linked from **Variants**), select the T-shirt designs, enable the offer, and save. Defaults are a minimum of 3 shirts and ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¹333 per shirt. Different selected designs, sizes, and colors count together; all eligible shirts receive the rate once the minimum is met. Other products are excluded. Percentage discounts do not stack on bulk-priced shirts unless the admin enables stacking. A lower regular price is retained.
 
 The backend stores settings in the `TshirtOffer` collection. `GET/PUT /api/tshirt-offer` reads/saves the settings, and `POST /api/order/quote` calculates prices using the same engine as cart totals and checkout. The offer is initially disabled until eligible products are selected and saved. Saved order line prices include discounts so order history, bills, cancellations, and returns use the paid prices.
 
@@ -52,7 +52,7 @@ Validation: `node --test tests/*.test.mjs` and `npm run build` in each Vite app;
 
 ## Promotional popup campaigns
 
-Open **Store management > Promotional popups** to create, edit, pause, delete and reorder campaigns. Drag saved rows or use their up/down arrows; order saves immediately. The editor previews the storefront card at desktop (840px), tablet (640px), and mobile (360px) widths. Mobile hides the image panel. Choose dark/light glass and promotion, newsletter signup, coupon unlock, or clearance countdown. Countdown campaigns require an end time; expired campaigns stop being served. Enter times locally; the backend stores UTC.
+Open **Store management > Promotional popups** to create, edit, pause, delete and reorder campaigns. Drag saved rows or use their up/down arrows; order saves immediately. The editor previews the storefront card at desktop (840px), tablet (640px), and mobile (360px) widths. Mobile displays a compact image above the content by default. Image fit (crop/full image), image position, and mobile visibility can be adjusted per campaign. With no image or a failed image, mobile shows the content alone. Choose dark/light glass and promotion, newsletter signup, coupon unlock, or clearance countdown. Countdown campaigns require an end time; expired campaigns stop being served. Enter times locally; the backend stores UTC.
 
 The first active campaign appears 5 seconds after the browser session begins, or as soon as campaign data arrives if loading takes longer. X, backdrop, Escape, or a successful CTA starts a persisted 90-second wait for the next campaign. Campaigns follow priority, creation date, and ID. Each dismissed campaign appears once per session; the queue stops when exhausted. Background refreshes can add new campaigns. Browser throttling can delay rendering in background tabs.
 
