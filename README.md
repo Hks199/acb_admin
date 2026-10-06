@@ -49,3 +49,35 @@ All management endpoints require a valid JWT and the `Admin` role checked agains
 MongoDB stores `Announcement` documents and one `AnnouncementLock` document. Every mutation writes the singleton lock inside a transaction before updating announcements, so concurrent toggles of the same message serialize and failed saves roll back. Activating one message does not deactivate any others. This requires a MongoDB replica set or Atlas, as existing cart transactions already do. Transactions and collection creation must be permitted for the backend database account.
 
 Validation: `node --test tests/*.test.mjs` and `npm run build` in each Vite app; `node --test tests/*.test.js` in the backend. Announcement tests use simulated database transactions and local HTTP servers for auth; they do not write to the live database.
+
+## Promotional popup campaigns
+
+Open **Store management > Promotional popups** to create, edit, pause, delete and reorder campaigns. Drag saved rows or use their up/down arrows; order saves immediately. The editor previews the storefront card at desktop (840px), tablet (640px), and mobile (360px) widths. Mobile hides the image panel. Choose dark/light glass and promotion, newsletter signup, coupon unlock, or clearance countdown. Countdown campaigns require an end time; expired campaigns stop being served. Enter times locally; the backend stores UTC.
+
+The first active campaign appears 5 seconds after the browser session begins, or as soon as campaign data arrives if loading takes longer. X, backdrop, Escape, or a successful CTA starts a persisted 90-second wait for the next campaign. Campaigns follow priority, creation date, and ID. Each dismissed campaign appears once per session; the queue stops when exhausted. Background refreshes can add new campaigns. Browser throttling can delay rendering in background tabs.
+
+`sessionStorage.acbPopupQueueV1` records session start, last dismissal, next index, active ID, dismissed IDs and completed IDs. Reload/navigation preserves deadlines. Completed IDs also persist in `localStorage.acbCompletedPopupIdsV1` and are excluded in future sessions on that browser. Clearing browser storage clears this history. Editing a completed campaign does not reset its exclusion; create a new campaign for a new conversion opportunity.
+
+Newsletter CTAs save normalized addresses once per campaign/email pair before recording completion. Failed signups remain available for retry. **View signups** shows the latest 200 addresses. This stores subscribers; it does not send emails or connect to an external marketing provider. Signup records are retained if a campaign is deleted. Coupon containers copy the configured code and show a green check with Copied! Copying alone does not dismiss or mark conversion. Popup coupon codes are display content; they do not create checkout discount rules.
+
+Images upload to the existing S3 service via an authenticated API (JPG/PNG/WebP/AVIF, maximum 8 MB). EC2 needs the existing AWS region, bucket and credentials, with public read access for the resulting image URLs. Existing HTTP/HTTPS image URLs may also be pasted. Campaign deletion does not remove S3 images.
+
+Deploy the backend first, then both Vite apps. Campaigns start disabled. Management requires a database-verified Admin JWT, and MongoDB transactions keep reordering consistent with concurrent edits.
+
+Public API:
+
+- `GET /api/promotional-popups/active`: sorted active/unexpired array.
+- `POST /api/promotional-popups/:id/subscribe`: email field for an active newsletter campaign.
+
+Protected API:
+
+- `GET/POST /api/admin/promotional-popups`: list/create.
+- `PUT/DELETE /api/admin/promotional-popups/:id`: update/delete.
+- `PATCH /api/admin/promotional-popups/:id/toggle`: explicit isActive or invert.
+- `PUT /api/admin/promotional-popups/reorder`: campaignIds array containing every saved ID once, in desired order.
+- `POST /api/admin/promotional-popups/upload-image`: multipart image; returns imageUrl.
+- `GET /api/admin/promotional-popups/:id/subscriptions`: latest 200 addresses, admin only.
+
+Fields: title (120 characters), subtitle (500), imageUrl, ctaText (50), ctaUrl, couponCode (40), displayType, backgroundTheme, priority_order (positive integer), isActive, and optional endsAt (ISO date/null). CTA targets accept site paths starting with / or HTTP/HTTPS URLs. Unsafe schemes and protocol-relative URLs are rejected. The backend accepts snake-case aliases for URL/text/type/theme/status fields.
+
+Popup checks: backend `node --test tests/popupCampaign.test.js`; storefront `node --test tests/popupQueue.test.mjs tests/popupUi.test.mjs`; admin `node --test tests/popupCampaigns.test.mjs`. Fake-clock tests check exact deadlines and persistence. Database and S3 tests use stubs without production writes. The card and CSS under src/components/promotions are identical copies in both frontend repositories; update both together for visual changes.
