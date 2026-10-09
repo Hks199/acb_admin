@@ -7,6 +7,7 @@ const pageNames = {
   '/images': 'Image library', '/vendor': 'Vendors', '/ratings': 'Ratings & reviews',
   '/promotional-popups': 'Promotional popups',
   '/announcements': 'Announcements',
+  '/faqs': 'FAQs',
   '/tshirt-offer': 'T-shirt offer',
   '/discount-rules': 'Discount & Offers Setup',
   '/orders': 'Orders', '/order-detail': 'Order details',

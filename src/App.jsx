@@ -4,6 +4,7 @@ import Login from './pages/login/Login';
 import { getAdminToken, clearAdminSession, ADMIN_TOKEN_KEY } from './lib/adminAuth';
 import api from './api/client';
 import Announcements from './pages/announcements/Announcements';
+import Faqs from './pages/faqs/Faqs';
 import PopupCampaigns from './pages/promotions/PopupCampaigns';
 import ParentComponent from './components/ParentComponent';
 import CategoryPage from "./pages/category/Categories";
@@ -66,6 +67,7 @@ function App() {
             <Route path="/varients" element={<VarientPage />} />
             <Route path="/promotional-popups" element={<PopupCampaigns />} />
             <Route path="/announcements" element={<Announcements />} />
+            <Route path="/faqs" element={<Faqs />} />
             <Route path="/tshirt-offer" element={<TshirtOffer />} />
             <Route path="/discount-rules" element={<DiscountRules />} />
             <Route path="/images" element={<ImageScreen />} />

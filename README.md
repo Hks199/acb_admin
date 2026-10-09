@@ -1,5 +1,19 @@
 # React + Vite
 
+## FAQs
+
+Open **Store management > FAQs** to create, edit, publish/hide, delete, and change the display order of storefront FAQs. Both the question and answer are editable. Entries default to hidden; lower display orders appear first, with creation time and ID breaking ties. Public FAQs appear on the homepage before Contact and on `/faq`, linked from the storefront navigation and footer. Open storefronts refresh every 30 seconds and on focus.
+
+Backend: `C:/Users/admin/Documents/acb_project`. MongoDB collection: `faqs` (created on first save). Fields: `question` (required trimmed text, 1–300 characters), `answer` (required trimmed plain text, 1–10000 characters), `isActive` (boolean, default false), `sortOrder` (integer 0–1000000, default 0), plus `_id`, `createdAt`, `updatedAt`. Line breaks are preserved. HTML is rendered as text.
+
+- `GET /api/faqs`: public array of active FAQs in display order; no cache.
+- `GET /api/admin/faqs`: all FAQs in display order.
+- `POST /api/admin/faqs`: create using `{ question, answer, isActive, sortOrder }`.
+- `PUT /api/admin/faqs/:id`: update one or more fields; `{ isActive: false }` hides an entry.
+- `DELETE /api/admin/faqs/:id`: permanently delete.
+
+All admin endpoints use the existing JWT middleware and database Admin role check. Invalid input/IDs return 400 and missing entries return 404. Deploy backend first, then both Vite apps with their existing API settings. No live database changes or initial content are required. Verify with `node --test tests/*.test.js` in the backend and `npm run build` in each Vite app. FAQ API tests use an in-memory model and local HTTP server, without live database writes.
+
 ## Deploying to Netlify
 
 The T-shirt bulk offer spans this admin app, the sibling `acb_frontend` storefront, and the backend at `C:/Users/admin/Documents/acb_project`. Deploy the backend first, then both frontend builds.

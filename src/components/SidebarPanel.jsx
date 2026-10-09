@@ -13,6 +13,7 @@ const groups = [
     ['/discount-rules', 'Discount & Offers Setup', FiShoppingBag],
     ['/promotional-popups', 'Promotional popups', FiShoppingBag],
     ['/announcements', 'Announcements', FiFeather],
+    ['/faqs', 'FAQs', FiFeather],
     ['/orders', 'Orders', FiShoppingBag], ['/ratings', 'Ratings & reviews', FiStar],
     ['/cancel-orders', 'Cancellations', FiXCircle], ['/return-orders', 'Returns', FiRotateCcw],
   ] },
