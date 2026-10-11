@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert, Autocomplete, Button, Checkbox, FormControlLabel, Switch, TextField } from '@mui/material';
+import { Alert, Autocomplete, Button, Checkbox, FormControlLabel, Switch, TextField, Typography } from '@mui/material';
 import PageHeading from '../../components/PageHeading';
 import { getTshirtOffer, saveTshirtOffer } from '../../api/offers';
 import { getAllVarient } from '../../api/varients';
@@ -78,7 +78,8 @@ export default function TshirtOffer() {
       <FormControlLabel control={<Checkbox checked={offer.combineProducts} disabled={loading || saving} onChange={(event) => change('combineProducts', event.target.checked)} />}
         label="Combine eligible designs, sizes, and colors toward the minimum quantity" />
       <FormControlLabel control={<Checkbox checked={offer.stackDiscounts} disabled={loading || saving} onChange={(event) => change('stackDiscounts', event.target.checked)} />}
-        label="Apply existing percentage discounts on top of the T-shirt offer" />
+        label="Apply the order value discount on top of the T-shirt offer" />
+      <Typography variant="body2" color="text.secondary">The first-order discount applies to eligible first-time buyers at the T-shirt offer price, using the percentage and status saved in Discount &amp; Offers Setup.</Typography>
       <Alert severity="info">At {offer.minimumQuantity || 3} or more eligible T-shirts, each costs ₹{offer.unitPrice || 333}.
         All additional eligible shirts receive the same rate. Other products keep their own pricing.
         A lower regular price is kept.</Alert>

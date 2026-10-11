@@ -4,7 +4,7 @@ import PageHeading from '../../components/PageHeading';
 import { getDiscountRules, saveDiscountRule } from '../../api/discountRules';
 
 const blocks = [
-  { key: 'first_order_discount', title: 'First-time customer settings', description: 'Available to signed-in customers with no existing orders.' },
+  { key: 'first_order_discount', title: 'First-time customer settings', description: 'Available to signed-in customers with no successful purchases. Unpaid and failed checkout attempts do not count; refunded purchases still count.' },
   { key: 'milestone_discount', title: 'Order value milestone settings', description: 'An additional discount when the total after product offers reaches the minimum purchase amount.' },
 ];
 
