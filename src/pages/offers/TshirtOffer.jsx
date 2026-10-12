@@ -79,7 +79,7 @@ export default function TshirtOffer() {
         label="Combine eligible designs, sizes, and colors toward the minimum quantity" />
       <FormControlLabel control={<Checkbox checked={offer.stackDiscounts} disabled={loading || saving} onChange={(event) => change('stackDiscounts', event.target.checked)} />}
         label="Apply the order value discount on top of the T-shirt offer" />
-      <Typography variant="body2" color="text.secondary">The first-order discount applies to eligible first-time buyers at the T-shirt offer price, using the percentage and status saved in Discount &amp; Offers Setup.</Typography>
+      <Typography variant="body2" color="text.secondary">T-shirts are excluded from the first-order discount. This switch controls only the order value discount.</Typography>
       <Alert severity="info">At {offer.minimumQuantity || 3} or more eligible T-shirts, each costs ₹{offer.unitPrice || 333}.
         All additional eligible shirts receive the same rate. Other products keep their own pricing.
         A lower regular price is kept.</Alert>
